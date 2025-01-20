@@ -1,0 +1,6 @@
+@todo_list_enh.Server_HostAddress = http://localhost:5234
+
+GET {{todo_list_enh.Server_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
