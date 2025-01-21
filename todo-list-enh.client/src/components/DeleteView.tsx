@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import './App.css';
 
 interface Forecast {
     date: string;
@@ -8,7 +7,7 @@ interface Forecast {
     summary: string;
 }
 
-function App() {
+const DeleteView: React.FC = () => {
     const [forecasts, setForecasts] = useState<Forecast[]>();
 
     useEffect(() => {
@@ -38,28 +37,22 @@ function App() {
             </tbody>
         </table>;
 
-    return (
-        <div>
-            <h1 id="tableLabel">Weather forecast</h1>
-            <p>This component demonstrates fetching data from the server.</p>
-            {contents}
-        </div>
-        /*return (
-        <Router>
-            <Routes>
-                <Route path="/WeatherForecast/Delete" element={<DeleteView />} />
-            </Routes>
-        </Router>
-    );*/
-    );
+        return (
+            <div>
+                <h1 id="tableLabel">Weather forecast</h1>
+                <p>This component demonstrates fetching data from the server.</p>
+                {contents}
+            </div>
 
-    async function populateWeatherData() {
-        const response = await fetch('weatherforecast');
-        if (response.ok) {
-            const data = await response.json();
-            setForecasts(data);
+        );
+
+        async function populateWeatherData() {
+            const response = await fetch('/WeatherForecast/Delete');
+            if (response.ok) {
+                const data = await response.json();
+                setForecasts(data);
+            }
         }
-    }
-}
+};
 
-export default App;
+export default DeleteView;
