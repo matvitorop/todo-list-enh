@@ -3,4 +3,4 @@
 
 _*Collaborators:*_
 - _*Matvii Torop*_
-- _*Goltsev Konstantin*_
+- _*Holtsev Kostiantyn*_

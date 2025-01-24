@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using todo_list_enh.Server.Models;
 
 namespace todo_list_enh.Server.Controllers
 {
@@ -31,13 +32,11 @@ namespace todo_list_enh.Server.Controllers
         }
 
         [HttpGet("Delete")]
-        public IEnumerable<WeatherForecast> DeleteView()
+        public IEnumerable<Test> DeleteView()
         {
-            return Enumerable.Range(1, 5).Select(index => new WeatherForecast
+            return Enumerable.Range(1, 5).Select(index => new Test
             {
-                Date = DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                TemperatureC = Random.Shared.Next(-20, 55),
-                Summary = Summaries[Random.Shared.Next(Summaries.Length)]
+                TemperatureC = Random.Shared.Next(-20, 55)
             })
             .ToArray();
         }

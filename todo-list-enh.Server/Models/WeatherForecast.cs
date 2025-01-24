@@ -1,4 +1,4 @@
-namespace todo_list_enh.Server
+namespace todo_list_enh.Server.Models
 {
     public class WeatherForecast
     {
