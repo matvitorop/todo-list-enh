@@ -36,7 +36,7 @@ namespace todo_list_enh.Server.Controllers
         {
             return Enumerable.Range(1, 5).Select(index => new Test
             {
-                TemperatureC = Random.Shared.Next(-20, 55)
+                Temperature = Random.Shared.Next(-20, 55)
             })
             .ToArray();
         }
