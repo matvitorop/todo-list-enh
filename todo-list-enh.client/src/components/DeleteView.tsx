@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
+// REWORK OR DELETE VIEW
 
 interface Test {
     temperatureC: number;
