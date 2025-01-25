@@ -1,3 +1,8 @@
+using Microsoft.EntityFrameworkCore;
+using System;
+using todo_list_enh.Server.Data;
+using todo_list_enh.Server.Services;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Додаємо сервіси до контейнера.
@@ -16,6 +21,12 @@ builder.Services.AddCors(options =>
                .AllowAnyMethod();
     });
 });
+
+// Adding new service
+builder.Services.AddScoped<DatabaseService>();
+// Add dbContext to services
+builder.Services.AddDbContext<ETLDbContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
 var app = builder.Build();
 
