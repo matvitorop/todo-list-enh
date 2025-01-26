@@ -1,5 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
-using todo_list_enh.Server.Models;
+using todo_list_enh.Server.Models.Rework;
 // REWORK VIEW
 namespace todo_list_enh.Server.Controllers
 {

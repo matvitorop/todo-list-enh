@@ -1,4 +1,4 @@
-namespace todo_list_enh.Server.Models
+namespace todo_list_enh.Server.Models.Rework
 {
     public class WeatherForecast
     {
