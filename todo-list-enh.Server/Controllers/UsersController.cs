@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using todo_list_enh.Server.Models.DTO;
-using todo_list_enh.Server.Repositories;
+using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
 
 namespace todo_list_enh.Server.Controllers

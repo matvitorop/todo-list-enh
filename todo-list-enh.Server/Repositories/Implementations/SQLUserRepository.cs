@@ -3,16 +3,17 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Models.Domain;
+using todo_list_enh.Server.Repositories.Interfaces;
 
-namespace todo_list_enh.Server.Repositories
+namespace todo_list_enh.Server.Repositories.Implementations
 {
     public class SQLUserRepository : IUserRepository
     {
         private readonly ETLDbContext _dbContext;
 
-        public SQLUserRepository (ETLDbContext dbContext)
+        public SQLUserRepository(ETLDbContext dbContext)
         {
-            this._dbContext = dbContext;
+            _dbContext = dbContext;
         }
 
         public async Task<User> AddUser(User user)
@@ -40,7 +41,7 @@ namespace todo_list_enh.Server.Repositories
         public async Task<User> GetById(int id)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-            
+
             if (user == null)
             {
                 return null;
