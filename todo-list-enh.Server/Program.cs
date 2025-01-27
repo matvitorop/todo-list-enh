@@ -1,7 +1,8 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using todo_list_enh.Server.Data;
-using todo_list_enh.Server.Repositories;
+using todo_list_enh.Server.Repositories.Implementations;
+using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
