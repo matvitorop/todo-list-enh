@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using todo_list_enh.Server.Data;
+using todo_list_enh.Server.Mapping;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
@@ -33,6 +34,9 @@ builder.Services.AddDbContext<ETLDbContext>(options =>
 
 //Adding user Repository
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+
+//Adding automapper for users
+builder.Services.AddAutoMapper(typeof(UserMapper));
 
 var app = builder.Build();
 

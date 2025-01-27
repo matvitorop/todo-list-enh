@@ -18,6 +18,8 @@ namespace todo_list_enh.Server.Repositories.Implementations
 
         public async Task<User> AddUser(User user)
         {
+            user.Password = HashPassword(user.Password);
+
             await _dbContext.AddAsync(user);
             await _dbContext.SaveChangesAsync();
             return user;
@@ -31,7 +33,7 @@ namespace todo_list_enh.Server.Repositories.Implementations
                 return null;
             }
 
-            if (!VerifyPassword(password, user.Password))
+            if (HashPassword(password)==user.Password)
             {
                 return null;
             }
@@ -49,11 +51,18 @@ namespace todo_list_enh.Server.Repositories.Implementations
             return user;
         }
 
+        // Better to remove
         private bool VerifyPassword(string password, string hashedPassword)
         {
             using var sha256 = SHA256.Create();
             var hashedInput = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
             return hashedInput == hashedPassword;
+        }
+
+        private string HashPassword(string password)
+        {
+            using var sha256 = SHA256.Create();
+            return Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
         }
     }
 }
