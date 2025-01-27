@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using System;
 using todo_list_enh.Server.Data;
+using todo_list_enh.Server.Repositories;
 using todo_list_enh.Server.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +11,7 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
 
 // Додаємо CORS перед створенням додатку
 builder.Services.AddCors(options =>
@@ -27,6 +29,9 @@ builder.Services.AddScoped<DatabaseService>();
 // Add dbContext to services
 builder.Services.AddDbContext<ETLDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+//Adding user Repository
+builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
 
 var app = builder.Build();
 
