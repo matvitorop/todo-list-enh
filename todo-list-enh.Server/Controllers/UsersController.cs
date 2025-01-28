@@ -21,14 +21,14 @@ namespace todo_list_enh.Server.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
-        private readonly IConfiguration configuration;
+        private readonly TokenGenerator _token;
 
-        public UsersController(ILogger<WeatherForecastController> logger, IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
+        public UsersController(ILogger<WeatherForecastController> logger, IUserRepository userRepository, IMapper mapper, TokenGenerator token)
         {
             this._logger = logger;
             this.userRepository = userRepository;
             this.mapper = mapper;
-            this.configuration = configuration;
+            this._token = token;
         }
 
         [HttpGet]
@@ -69,7 +69,7 @@ namespace todo_list_enh.Server.Controllers
 
             if (userDomain != null)
             {
-                var token = GenerateJwtToken(userDomain);
+                var token = _token.GenerateJwtToken(userDomain);
 
                 return Ok(new { Token = token });
             }
