@@ -12,6 +12,5 @@ namespace todo_list_enh.Server.Mapping
 
             CreateMap<AddUserDTO, User>();
         }
-
     }
 }

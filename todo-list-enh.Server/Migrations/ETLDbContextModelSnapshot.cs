@@ -42,7 +42,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("GoalId");
 
-                    b.ToTable("DailyGoals");
+                    b.ToTable("DailyGoal");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.DailyTask", b =>
@@ -68,7 +68,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("DailyTasks");
+                    b.ToTable("DailyTask");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Day", b =>
@@ -89,7 +89,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Days");
+                    b.ToTable("Day");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Goal", b =>
@@ -125,7 +125,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Goals");
+                    b.ToTable("Goal");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Journal", b =>
@@ -155,7 +155,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Journals");
+                    b.ToTable("Journal");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.JournalRecord", b =>
@@ -180,7 +180,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("JournalId");
 
-                    b.ToTable("JournalRecords");
+                    b.ToTable("JournalRecord");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Task", b =>
@@ -222,7 +222,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Tasks");
+                    b.ToTable("Task");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.User", b =>
@@ -253,7 +253,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("User");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Week", b =>
@@ -274,7 +274,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Weeks");
+                    b.ToTable("Week");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.WeekGoal", b =>
@@ -297,7 +297,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("WeekGoals");
+                    b.ToTable("WeekGoal");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.WeekTask", b =>
@@ -323,7 +323,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("WeekTasks");
+                    b.ToTable("WeekTask");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.DailyGoal", b =>

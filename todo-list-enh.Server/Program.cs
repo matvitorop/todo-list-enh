@@ -9,6 +9,8 @@ using todo_list_enh.Server.Mapping;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
+using todo_list_enh.Server.Services.Implementations;
+using todo_list_enh.Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -69,9 +71,13 @@ builder.Services.AddDbContext<ETLDbContext>(options =>
 
 //Adding user Repository
 builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+builder.Services.AddScoped<IJournalRepository, JournalRepository>();
+builder.Services.AddScoped<IJournalService, JournalService>();
+
 
 //Adding automapper for users
 builder.Services.AddAutoMapper(typeof(UserMapper));
+builder.Services.AddAutoMapper(typeof(JournalMapper));
 
 //Add JWT settings
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

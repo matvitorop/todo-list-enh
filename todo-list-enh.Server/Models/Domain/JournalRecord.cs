@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace todo_list_enh.Server.Models.Domain
 {
+    [Table("JournalRecord")]
     public class JournalRecord
     {
         [Key]
