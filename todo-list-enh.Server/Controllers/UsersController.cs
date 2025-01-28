@@ -1,6 +1,12 @@
-﻿using AutoMapper;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO;
 using todo_list_enh.Server.Repositories.Interfaces;
@@ -15,12 +21,14 @@ namespace todo_list_enh.Server.Controllers
         private readonly ILogger<WeatherForecastController> _logger;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
+        private readonly IConfiguration configuration;
 
-        public UsersController(ILogger<WeatherForecastController> logger, IUserRepository userRepository, IMapper mapper)
+        public UsersController(ILogger<WeatherForecastController> logger, IUserRepository userRepository, IMapper mapper, IConfiguration configuration)
         {
             this._logger = logger;
             this.userRepository = userRepository;
             this.mapper = mapper;
+            this.configuration = configuration;
         }
 
         [HttpGet]
@@ -61,12 +69,29 @@ namespace todo_list_enh.Server.Controllers
 
             if (userDomain != null)
             {
-                var userDtoResult = mapper.Map<UserDTO>(userDomain);
+                var token = GenerateJwtToken(userDomain);
 
-                return Ok(userDtoResult);
+                return Ok(new { Token = token });
             }
 
-            return BadRequest("User is not registered");
+            return BadRequest("Invalid email or password");
+        }
+
+        [Authorize]
+        [HttpGet]
+        [Route("profile")]
+        public async Task<IActionResult> GetProfile()
+        {
+            var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
+            var user = await userRepository.GetById(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            var userDto = mapper.Map<UserDTO>(user);
+            return Ok(userDto);
         }
     }
 }
