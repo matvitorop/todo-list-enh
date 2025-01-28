@@ -52,5 +52,21 @@ namespace todo_list_enh.Server.Controllers
 
             return BadRequest("User already exists.");
         }
+
+        [HttpPost]
+        [Route("login")]
+        public async Task<IActionResult> Login([FromBody] AddUserDTO userDTO)
+        {
+            var userDomain = await userRepository.GetByEmailAndPassword(userDTO.Email, userDTO.Password);
+
+            if (userDomain != null)
+            {
+                var userDtoResult = mapper.Map<UserDTO>(userDomain);
+
+                return Ok(userDtoResult);
+            }
+
+            return BadRequest("User is not registered");
+        }
     }
 }
