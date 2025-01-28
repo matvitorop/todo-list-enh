@@ -94,7 +94,7 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-//Add service for token generation
+//Add service for token generations
 builder.Services.AddScoped<TokenGenerator>();
 
 var app = builder.Build();
