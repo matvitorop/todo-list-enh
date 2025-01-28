@@ -53,12 +53,19 @@ namespace todo_list_enh.Server.Controllers
         {
             if (await userRepository.CheckUserByEmail(userDTO))
             {
-                var userDomain = mapper.Map<User>(userDTO);
-                
-                return Ok(await userRepository.AddUser(userDomain));
+                return BadRequest("User already exists.");
             }
 
-            return BadRequest("User already exists.");
+            var userDomain = mapper.Map<User>(userDTO);
+            var createdUser = await userRepository.AddUser(userDomain);
+
+            var token = _token.GenerateJwtToken(createdUser);
+
+            return Ok(new
+            {
+                Token = token,
+                Username = createdUser.Username
+            });
         }
 
         [HttpPost]
@@ -71,7 +78,7 @@ namespace todo_list_enh.Server.Controllers
             {
                 var token = _token.GenerateJwtToken(userDomain);
 
-                return Ok(new { Token = token });
+                return Ok(new { user = userDomain, Token = token });
             }
 
             return BadRequest("Invalid email or password");

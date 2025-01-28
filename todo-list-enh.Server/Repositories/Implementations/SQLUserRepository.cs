@@ -34,10 +34,11 @@ namespace todo_list_enh.Server.Repositories.Implementations
                 return null;
             }
 
-            if (HashPassword(password)==user.Password)
+            if (HashPassword(password)!=user.Password)
             {
                 return null;
             }
+
             return user;
         }
 
@@ -58,10 +59,10 @@ namespace todo_list_enh.Server.Repositories.Implementations
 
             if (user == null)
             {
-                return true;
+                return false;
             }
 
-            return false;
+            return true;
         }
 
         // Better to remove
