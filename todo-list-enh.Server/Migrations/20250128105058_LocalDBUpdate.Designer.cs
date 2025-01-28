@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using todo_list_enh.Server.Data;
 
@@ -11,9 +12,11 @@ using todo_list_enh.Server.Data;
 namespace todo_list_enh.Server.Migrations
 {
     [DbContext(typeof(ETLDbContext))]
-    partial class ETLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250128105058_LocalDBUpdate")]
+    partial class LocalDBUpdate
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -42,7 +45,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("GoalId");
 
-                    b.ToTable("DailyGoal");
+                    b.ToTable("DailyGoals");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.DailyTask", b =>
@@ -68,7 +71,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("TaskId");
 
-                    b.ToTable("DailyTask");
+                    b.ToTable("DailyTasks");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Day", b =>
@@ -89,7 +92,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Day");
+                    b.ToTable("Days");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Goal", b =>
@@ -125,7 +128,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Goal");
+                    b.ToTable("Goals");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Journal", b =>
@@ -155,7 +158,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Journal");
+                    b.ToTable("Journals");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.JournalRecord", b =>
@@ -180,7 +183,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("JournalId");
 
-                    b.ToTable("JournalRecord");
+                    b.ToTable("JournalRecords");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.Task", b =>
@@ -222,7 +225,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Task");
+                    b.ToTable("Tasks");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.User", b =>
@@ -274,7 +277,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("Week");
+                    b.ToTable("Weeks");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.WeekGoal", b =>
@@ -297,7 +300,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("WeekGoal");
+                    b.ToTable("WeekGoals");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.WeekTask", b =>
@@ -323,7 +326,7 @@ namespace todo_list_enh.Server.Migrations
 
                     b.HasIndex("WeekId");
 
-                    b.ToTable("WeekTask");
+                    b.ToTable("WeekTasks");
                 });
 
             modelBuilder.Entity("todo_list_enh.Server.Models.Domain.DailyGoal", b =>

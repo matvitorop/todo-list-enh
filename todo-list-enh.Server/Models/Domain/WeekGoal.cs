@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace todo_list_enh.Server.Models.Domain
 {
+    [Table("WeekGoal")]
     public class WeekGoal
     {
         [Key]

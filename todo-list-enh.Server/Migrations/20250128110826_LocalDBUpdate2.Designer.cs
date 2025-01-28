@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using todo_list_enh.Server.Data;
 
@@ -11,9 +12,11 @@ using todo_list_enh.Server.Data;
 namespace todo_list_enh.Server.Migrations
 {
     [DbContext(typeof(ETLDbContext))]
-    partial class ETLDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250128110826_LocalDBUpdate2")]
+    partial class LocalDBUpdate2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
