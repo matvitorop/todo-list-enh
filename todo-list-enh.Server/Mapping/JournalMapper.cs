@@ -9,6 +9,7 @@ namespace todo_list_enh.Server.Mapping
         public JournalMapper()
         {
             CreateMap<Journal, JournalDTO>();
+            CreateMap<AddJournalDTO, Journal>();
         }
     }
 }

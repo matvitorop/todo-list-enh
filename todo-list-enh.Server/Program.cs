@@ -42,6 +42,7 @@ builder.Services.AddScoped<IJournalService, JournalService>();
 
 //Adding automapper for users
 builder.Services.AddAutoMapper(typeof(UserMapper));
+builder.Services.AddAutoMapper(typeof(JournalMapper));
 
 var app = builder.Build();
 
