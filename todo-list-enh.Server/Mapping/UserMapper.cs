@@ -9,6 +9,8 @@ namespace todo_list_enh.Server.Mapping
         public UserMapper() 
         {
             CreateMap<User, UserDTO>();
+
+            CreateMap<AddUserDTO, User>();
         }
 
     }

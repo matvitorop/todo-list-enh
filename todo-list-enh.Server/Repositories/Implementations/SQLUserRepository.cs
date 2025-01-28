@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Models.Domain;
+using todo_list_enh.Server.Models.DTO;
 using todo_list_enh.Server.Repositories.Interfaces;
 
 namespace todo_list_enh.Server.Repositories.Implementations
@@ -49,6 +50,18 @@ namespace todo_list_enh.Server.Repositories.Implementations
                 return null;
             }
             return user;
+        }
+
+        public async Task<bool> CheckUserByEmail(AddUserDTO userDTO)
+        {
+            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == userDTO.Email);
+
+            if (user == null)
+            {
+                return true;
+            }
+
+            return false;
         }
 
         // Better to remove

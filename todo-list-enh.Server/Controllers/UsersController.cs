@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
@@ -35,16 +36,21 @@ namespace todo_list_enh.Server.Controllers
 
             var userDTO = mapper.Map<UserDTO>(user);
 
-            //UserDTO userDTO = new UserDTO();
-            //
-            ////Fix by automapper
-            //userDTO.Id = user.Id;
-            //userDTO.Username = user.Username;
-            //userDTO.Password = user.Password;
-            //userDTO.Email = user.Email;
-            //userDTO.CreatedAt = user.CreatedAt;
-
             return Ok(userDTO);
+        }
+
+        [HttpPost]
+        [Route("register")]
+        public async Task<IActionResult> Register([FromBody] AddUserDTO userDTO)
+        {
+            if (await userRepository.CheckUserByEmail(userDTO))
+            {
+                var userDomain = mapper.Map<User>(userDTO);
+                
+                return Ok(await userRepository.AddUser(userDomain));
+            }
+
+            return BadRequest("User already exists.");
         }
     }
 }
