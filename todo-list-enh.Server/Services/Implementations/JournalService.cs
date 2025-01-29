@@ -1,4 +1,6 @@
-﻿using todo_list_enh.Server.Models.Domain;
+﻿using AutoMapper;
+using todo_list_enh.Server.Models.Domain;
+using todo_list_enh.Server.Models.DTO.Journal;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services.Interfaces;
 
@@ -8,27 +10,37 @@ namespace todo_list_enh.Server.Services.Implementations
     public class JournalService : IJournalService
     {
         private readonly IJournalRepository _journalRepository;
+        private readonly IMapper _mapper;
 
-        public JournalService(IJournalRepository journalRepository)
+        public JournalService(IJournalRepository journalRepository, IMapper mapper)
         {
             _journalRepository = journalRepository;
+            _mapper = mapper;
         }
 
-        public async Task<IEnumerable<Journal>> GetJournalsByUserAsync(int userId)
+        public async Task<IEnumerable<JournalDTO>> GetJournalsByUserAsync(int userId)
         {
-            return await _journalRepository.GetJournalsByUserIdAsync(userId);
+            var journals = await _journalRepository.GetJournalsByUserIdAsync(userId);
+            return _mapper.Map<List<JournalDTO>>(journals);
         }
 
-        public async Task<Journal?> GetJournalDetailsAsync(int journalId)
+        public async Task<JournalDTO?> GetJournalDetailsAsync(int journalId)
         {
-            return await _journalRepository.GetJournalWithRecordsAsync(journalId);
+            var journal = await _journalRepository.GetJournalWithRecordsAsync(journalId);
+            if (journal == null)
+            {
+                return null;
+            }
+            return _mapper.Map<JournalDTO>(journal);
         }
 
-        public async Task<Journal> AddJournalAsync(Journal journal)
+        public async Task<JournalDTO> AddJournalAsync(AddJournalDTO journalDTO)
         {
+            var journal = _mapper.Map<Journal>(journalDTO);
             journal.CreatedAt = DateTime.UtcNow;
+
             await _journalRepository.AddAsync(journal);
-            return journal;
+            return _mapper.Map<JournalDTO>(journal);
         }
 
         public async Task<bool> DeleteJournalAsync(int journalId)

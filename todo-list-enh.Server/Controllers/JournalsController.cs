@@ -13,14 +13,10 @@ namespace todo_list_enh.Server.Controllers
     [Route("[controller]")]
     public class JournalsController : ControllerBase
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IMapper _mapper;
         private readonly IJournalService _journalService;
 
-        public JournalsController(IUserRepository userRepository, IMapper mapper, IJournalService journalService)
+        public JournalsController(IJournalService journalService)
         {
-            _userRepository = userRepository;
-            _mapper = mapper;
             _journalService = journalService;
         }
 
@@ -35,8 +31,7 @@ namespace todo_list_enh.Server.Controllers
                 return Unauthorized("User ID is missing in the token.");
             }
 
-            var journals = await _journalService.GetJournalsByUserAsync(int.Parse(userId));
-            var journalsDTO = _mapper.Map<List<JournalDTO>>(journals);
+            var journalsDTO = await _journalService.GetJournalsByUserAsync(int.Parse(userId));
             return Ok(journalsDTO);
         }
 
@@ -51,13 +46,12 @@ namespace todo_list_enh.Server.Controllers
                 return Unauthorized("User ID is missing in the token.");
             }
 
-            var journal = await _journalService.GetJournalDetailsAsync(journalId);
-            if (journal == null || journal.UserId != int.Parse(userId))
+            var journalDTO = await _journalService.GetJournalDetailsAsync(journalId);
+            if (journalDTO == null || journalDTO.UserId != int.Parse(userId))
             {
                 return NotFound("Journal not found or access denied.");
             }
 
-            var journalDTO = _mapper.Map<JournalDTO>(journal);
             return Ok(journalDTO);
         }
 
@@ -71,11 +65,8 @@ namespace todo_list_enh.Server.Controllers
                 return Unauthorized("User ID is missing in the token.");
             }
 
-            var journal = _mapper.Map<Journal>(journalDTO);
-            journal.UserId = int.Parse(userId);
-
-            var createdJournal = await _journalService.AddJournalAsync(journal);
-            return CreatedAtAction(nameof(GetJournalDetails), new { journalId = createdJournal.Id }, createdJournal);
+            var createdJournalDTO = await _journalService.AddJournalAsync(journalDTO);
+            return CreatedAtAction(nameof(GetJournalDetails), new { journalId = createdJournalDTO.Id }, createdJournalDTO);
         }
 
         [Authorize]
