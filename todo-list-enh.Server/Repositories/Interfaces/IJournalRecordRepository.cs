@@ -5,6 +5,5 @@ namespace todo_list_enh.Server.Repositories.Interfaces
     public interface IJournalRecordRepository : IRepository<JournalRecord>
     {
         Task<IEnumerable<JournalRecord>> GetRecordsByJournalIdAsync(int journalId);
-        Task<JournalRecord?> GetRecordByIdAsync(int recordId);
     }
 }
