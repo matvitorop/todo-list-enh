@@ -35,7 +35,7 @@ namespace todo_list_enh.Server.Controllers
         [Route("{id:int}")]
         public async Task<IActionResult> GetUserById([FromRoute] int id) 
         {
-            var user = await userRepository.GetById(id);
+            var user = await userRepository.GetByIdAsync(id);
             
             if (user == null)
             {
@@ -47,6 +47,7 @@ namespace todo_list_enh.Server.Controllers
             return Ok(userDTO);
         }
 
+        // ADD USER SERVICE 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] AddUserDTO userDTO)
@@ -84,13 +85,14 @@ namespace todo_list_enh.Server.Controllers
             return BadRequest("Invalid email or password");
         }
 
+        // TOKEN AUTHORIZE TEST
         [Authorize]
         [HttpGet]
         [Route("profile")]
         public async Task<IActionResult> GetProfile()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            var user = await userRepository.GetById(userId);
+            var user = await userRepository.GetByIdAsync(userId);
 
             if (user == null)
             {

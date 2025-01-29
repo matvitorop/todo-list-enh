@@ -8,15 +8,14 @@ using todo_list_enh.Server.Repositories.Interfaces;
 
 namespace todo_list_enh.Server.Repositories.Implementations
 {
-    public class SQLUserRepository : IUserRepository
+    public class UserRepository : Repository<User>, IUserRepository
     {
         private readonly ETLDbContext _dbContext;
 
-        public SQLUserRepository(ETLDbContext dbContext)
+        public UserRepository(ETLDbContext dbContext) : base(dbContext) 
         {
             _dbContext = dbContext;
         }
-
         public async Task<User> AddUser(User user)
         {
             user.Password = HashPassword(user.Password);
@@ -42,17 +41,6 @@ namespace todo_list_enh.Server.Repositories.Implementations
             return user;
         }
 
-        public async Task<User> GetById(int id)
-        {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Id == id);
-
-            if (user == null)
-            {
-                return null;
-            }
-            return user;
-        }
-
         public async Task<bool> CheckUserByEmail(AddUserDTO userDTO)
         {
             var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == userDTO.Email);
@@ -63,14 +51,6 @@ namespace todo_list_enh.Server.Repositories.Implementations
             }
 
             return true;
-        }
-
-        // Better to remove
-        private bool VerifyPassword(string password, string hashedPassword)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedInput = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-            return hashedInput == hashedPassword;
         }
 
         private string HashPassword(string password)
