@@ -3,7 +3,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Models.Domain;
-using todo_list_enh.Server.Models.DTO;
+using todo_list_enh.Server.Models.DTO.User;
 using todo_list_enh.Server.Repositories.Interfaces;
 
 namespace todo_list_enh.Server.Repositories.Implementations

@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using todo_list_enh.Server.Models.Domain;
-using todo_list_enh.Server.Models.DTO;
+using todo_list_enh.Server.Models.DTO.User;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
 
@@ -18,12 +18,12 @@ namespace todo_list_enh.Server.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private readonly ILogger<WeatherForecastController> _logger;
+        private readonly ILogger<UsersController> _logger;
         private readonly IUserRepository userRepository;
         private readonly IMapper mapper;
         private readonly TokenGenerator _token;
 
-        public UsersController(ILogger<WeatherForecastController> logger, IUserRepository userRepository, IMapper mapper, TokenGenerator token)
+        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository, IMapper mapper, TokenGenerator token)
         {
             this._logger = logger;
             this.userRepository = userRepository;

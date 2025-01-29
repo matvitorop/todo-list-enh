@@ -1,7 +1,8 @@
 ﻿using AutoMapper;
+using System.Security.Cryptography;
 using System.Text;
 using todo_list_enh.Server.Models.Domain;
-using todo_list_enh.Server.Models.DTO;
+using todo_list_enh.Server.Models.DTO.User;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services.Interfaces;
 
@@ -28,16 +29,16 @@ namespace todo_list_enh.Server.Services.Implementations
 
         public async Task<(string Token, string Username)?> RegisterAsync(AddUserDTO userDTO)
         {
-            var existingUser = await _userRepository.GetByEmailAsync(userDTO.Email);
+            var existingUser = await _userRepository.FindOneAsync(x => x.Email == userDTO.Email);
             if (existingUser != null)
             {
-                return null; // Користувач вже існує
+                return null;
             }
 
             var user = _mapper.Map<User>(userDTO);
             user.Password = HashPassword(userDTO.Password);
 
-            await _userRepository.AddUserAsync(user);
+            await _userRepository.AddAsync(user);
             var token = _tokenGenerator.GenerateJwtToken(user);
 
             return (token, user.Username);
@@ -45,7 +46,8 @@ namespace todo_list_enh.Server.Services.Implementations
 
         public async Task<(string Token, UserDTO User)?> LoginAsync(AddUserDTO userDTO)
         {
-            var user = await _userRepository.GetByEmailAsync(userDTO.Email);
+            var user = await _userRepository.FindOneAsync(x => x.Email == userDTO.Email);
+            
             if (user == null || !VerifyPassword(userDTO.Password, user.Password))
             {
                 return null;

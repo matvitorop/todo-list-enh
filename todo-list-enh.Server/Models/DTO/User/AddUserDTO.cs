@@ -1,4 +1,4 @@
-﻿namespace todo_list_enh.Server.Models.DTO
+﻿namespace todo_list_enh.Server.Models.DTO.User
 {
     public class AddUserDTO
     {

@@ -24,6 +24,10 @@ namespace todo_list_enh.Server.Repositories.Implementations
         {
             return await _context.Set<T>().FindAsync(id);
         }
+        public async Task<T?> FindOneAsync(Expression<Func<T, bool>> predicate)
+        {
+            return await _context.Set<T>().FirstOrDefaultAsync(predicate);
+        }
 
         public async Task<IEnumerable<T>> FindAsync(Expression<Func<T, bool>> predicate)
         {
