@@ -26,24 +26,37 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpGet]
-        [Route("{userId:int}")]
-        public async Task<IActionResult> GetJournalsByUser(int userId)
+        [Route("my")]
+        public async Task<IActionResult> GetJournalsByUser()
         {
-            var journals = await _journalService.GetJournalsByUserAsync(userId);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID is missing in the token.");
+            }
+
+            var journals = await _journalService.GetJournalsByUserAsync(int.Parse(userId));
             var journalsDTO = _mapper.Map<List<JournalDTO>>(journals);
             return Ok(journalsDTO);
         }
 
         [Authorize]
         [HttpGet]
-        [Route("{userId:int}/{journalId:int}")]
+        [Route("{journalId:int}")]
         public async Task<IActionResult> GetJournalDetails(int journalId)
         {
-            var journal = await _journalService.GetJournalDetailsAsync(journalId);
-            if (journal == null)
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
             {
-                return NotFound();
+                return Unauthorized("User ID is missing in the token.");
             }
+
+            var journal = await _journalService.GetJournalDetailsAsync(journalId);
+            if (journal == null || journal.UserId != int.Parse(userId))
+            {
+                return NotFound("Journal not found or access denied.");
+            }
+
             var journalDTO = _mapper.Map<JournalDTO>(journal);
             return Ok(journalDTO);
         }
@@ -66,9 +79,22 @@ namespace todo_list_enh.Server.Controllers
         }
 
         [Authorize]
-        [HttpDelete("{journalId}")]
+        [HttpDelete]
+        [Route("{journalId}")]
         public async Task<IActionResult> DeleteJournal(int journalId)
         {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (string.IsNullOrEmpty(userId))
+            {
+                return Unauthorized("User ID is missing in the token.");
+            }
+
+            var journal = await _journalService.GetJournalDetailsAsync(journalId);
+            if (journal == null || journal.UserId != int.Parse(userId))
+            {            
+                return NotFound("Journal not found or access denied.");
+            }
+
             var success = await _journalService.DeleteJournalAsync(journalId);
             if (!success)
             {
