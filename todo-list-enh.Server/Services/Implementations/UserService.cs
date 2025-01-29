@@ -36,7 +36,7 @@ namespace todo_list_enh.Server.Services.Implementations
             }
 
             var user = _mapper.Map<User>(userDTO);
-            user.Password = HashPassword(userDTO.Password);
+            user.Password = _userRepository.HashPassword(userDTO.Password);
 
             await _userRepository.AddAsync(user);
             var token = _tokenGenerator.GenerateJwtToken(user);
@@ -46,9 +46,9 @@ namespace todo_list_enh.Server.Services.Implementations
 
         public async Task<(string Token, UserDTO User)?> LoginAsync(AddUserDTO userDTO)
         {
-            var user = await _userRepository.FindOneAsync(x => x.Email == userDTO.Email);
+            var user = await _userRepository.GetByEmailAndPassword(userDTO.Email, userDTO.Password);
             
-            if (user == null || !VerifyPassword(userDTO.Password, user.Password))
+            if (user == null)
             {
                 return null;
             }
@@ -57,20 +57,5 @@ namespace todo_list_enh.Server.Services.Implementations
             var userDto = _mapper.Map<UserDTO>(user);
             return (token, userDto);
         }
-
-        private bool VerifyPassword(string password, string hashedPassword)
-        {
-            using var sha256 = SHA256.Create();
-            var hashedInput = Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-            return hashedInput == hashedPassword;
-        }
-
-        private string HashPassword(string password)
-        {
-            using var sha256 = SHA256.Create();
-            return Convert.ToBase64String(sha256.ComputeHash(Encoding.UTF8.GetBytes(password)));
-        }
     }
-
-
 }

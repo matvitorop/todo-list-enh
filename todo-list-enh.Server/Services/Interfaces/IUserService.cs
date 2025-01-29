@@ -8,5 +8,4 @@ namespace todo_list_enh.Server.Services.Interfaces
         Task<(string Token, string Username)?> RegisterAsync(AddUserDTO userDTO);
         Task<(string Token, UserDTO User)?> LoginAsync(AddUserDTO userDTO);
     }
-
 }

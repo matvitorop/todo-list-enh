@@ -74,6 +74,7 @@ builder.Services.AddDbContext<ETLDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IJournalService, JournalService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 //Adding automapper for users

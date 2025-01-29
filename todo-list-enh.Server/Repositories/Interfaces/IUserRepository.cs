@@ -8,5 +8,6 @@ namespace todo_list_enh.Server.Repositories.Interfaces
         Task<User> GetByEmailAndPassword(string email, string password);
         Task<bool> CheckUserByEmail(AddUserDTO userDTO);
         Task<User> AddUser(User user);
+        string HashPassword(string password);
     }
 }

@@ -11,6 +11,8 @@ using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO.User;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
+using todo_list_enh.Server.Services.Implementations;
+using todo_list_enh.Server.Services.Interfaces;
 
 namespace todo_list_enh.Server.Controllers
 {
@@ -23,49 +25,32 @@ namespace todo_list_enh.Server.Controllers
         private readonly IMapper mapper;
         private readonly TokenGenerator _token;
 
-        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository, IMapper mapper, TokenGenerator token)
+        private readonly IUserService _userService;
+
+        public UsersController(ILogger<UsersController> logger, IUserRepository userRepository, IMapper mapper, TokenGenerator token, IUserService userService)
         {
             this._logger = logger;
             this.userRepository = userRepository;
             this.mapper = mapper;
             this._token = token;
+            this._userService = userService;
         }
 
-        [HttpGet]
-        [Route("{id:int}")]
-        public async Task<IActionResult> GetUserById([FromRoute] int id) 
-        {
-            var user = await userRepository.GetByIdAsync(id);
-            
-            if (user == null)
-            {
-                return NotFound();
-            }
-
-            var userDTO = mapper.Map<UserDTO>(user);
-
-            return Ok(userDTO);
-        }
-
-        // ADD USER SERVICE 
         [HttpPost]
         [Route("register")]
         public async Task<IActionResult> Register([FromBody] AddUserDTO userDTO)
         {
-            if (await userRepository.CheckUserByEmail(userDTO))
+            var result = await _userService.RegisterAsync(userDTO);
+
+            if (result == null)
             {
                 return BadRequest("User already exists.");
             }
 
-            var userDomain = mapper.Map<User>(userDTO);
-            var createdUser = await userRepository.AddUser(userDomain);
-
-            var token = _token.GenerateJwtToken(createdUser);
-
             return Ok(new
             {
-                Token = token,
-                Username = createdUser.Username
+                Token = result.Value.Token,
+                Username = result.Value.Username
             });
         }
 
@@ -73,16 +58,18 @@ namespace todo_list_enh.Server.Controllers
         [Route("login")]
         public async Task<IActionResult> Login([FromBody] AddUserDTO userDTO)
         {
-            var userDomain = await userRepository.GetByEmailAndPassword(userDTO.Email, userDTO.Password);
+            var result = await _userService.LoginAsync(userDTO);
 
-            if (userDomain != null)
+            if (result == null)
             {
-                var token = _token.GenerateJwtToken(userDomain);
-
-                return Ok(new { user = userDomain, Token = token });
+                return BadRequest("Invalid email or password");
             }
 
-            return BadRequest("Invalid email or password");
+            return Ok(new
+            {
+                Token = result.Value.Token,
+                User = result.Value.User
+            });
         }
 
         // TOKEN AUTHORIZE TEST
@@ -92,15 +79,14 @@ namespace todo_list_enh.Server.Controllers
         public async Task<IActionResult> GetProfile()
         {
             var userId = int.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value ?? "0");
-            var user = await userRepository.GetByIdAsync(userId);
+            var user = await _userService.GetUserByIdAsync(userId);
 
             if (user == null)
             {
                 return NotFound();
             }
 
-            var userDto = mapper.Map<UserDTO>(user);
-            return Ok(userDto);
+            return Ok(user);
         }
     }
 }
