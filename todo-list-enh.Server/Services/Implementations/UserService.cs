@@ -27,7 +27,7 @@ namespace todo_list_enh.Server.Services.Implementations
             return user == null ? null : _mapper.Map<UserDTO>(user);
         }
 
-        public async Task<(string Token, string Username)?> RegisterAsync(AddUserDTO userDTO)
+        public async Task<(string Token, UserDTO User)?> RegisterAsync(AddUserDTO userDTO)
         {
             var existingUser = await _userRepository.FindOneAsync(x => x.Email == userDTO.Email);
             if (existingUser != null)
@@ -39,9 +39,11 @@ namespace todo_list_enh.Server.Services.Implementations
             user.Password = _userRepository.HashPassword(userDTO.Password);
 
             await _userRepository.AddAsync(user);
+            
             var token = _tokenGenerator.GenerateJwtToken(user);
+            var userDTOResult = _mapper.Map<UserDTO>(user);
 
-            return (token, user.Username);
+            return (token, userDTOResult);
         }
 
         public async Task<(string Token, UserDTO User)?> LoginAsync(AddUserDTO userDTO)

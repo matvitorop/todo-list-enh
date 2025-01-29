@@ -10,24 +10,20 @@ namespace todo_list_enh.Server.Repositories.Implementations
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly ETLDbContext _dbContext;
 
         public UserRepository(ETLDbContext dbContext) : base(dbContext) 
-        {
-            _dbContext = dbContext;
-        }
+        {}
         public async Task<User> AddUser(User user)
         {
             user.Password = HashPassword(user.Password);
+            await AddAsync(user);
 
-            await _dbContext.AddAsync(user);
-            await _dbContext.SaveChangesAsync();
             return user;
         }
 
         public async Task<User> GetByEmailAndPassword(string email, string password)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == email);
+            var user = await FindOneAsync(x => x.Email == email);
             if (user == null)
             {
                 return null;
@@ -43,7 +39,7 @@ namespace todo_list_enh.Server.Repositories.Implementations
 
         public async Task<bool> CheckUserByEmail(AddUserDTO userDTO)
         {
-            var user = await _dbContext.Users.FirstOrDefaultAsync(x => x.Email == userDTO.Email);
+            var user = await FindOneAsync(x => x.Email == userDTO.Email);
 
             if (user == null)
             {

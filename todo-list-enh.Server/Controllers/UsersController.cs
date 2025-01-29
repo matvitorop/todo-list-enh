@@ -50,7 +50,7 @@ namespace todo_list_enh.Server.Controllers
             return Ok(new
             {
                 Token = result.Value.Token,
-                Username = result.Value.Username
+                User = result.Value.User
             });
         }
 
