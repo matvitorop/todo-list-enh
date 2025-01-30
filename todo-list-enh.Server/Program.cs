@@ -6,6 +6,7 @@ using System;
 using System.Text;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Mapping;
+using todo_list_enh.Server.Middleware;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
@@ -74,12 +75,18 @@ builder.Services.AddDbContext<ETLDbContext>(options =>
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IJournalService, JournalService>();
+
 builder.Services.AddScoped<IUserService, UserService>();
 
+builder.Services.AddScoped<IJournalRecordRepository, JournalRecordRepository>();
+builder.Services.AddScoped<IJournalRecordService, JournalRecordService>();
 
-//Adding automapper for users
+
+
+//Adding automappers
 builder.Services.AddAutoMapper(typeof(UserMapper));
 builder.Services.AddAutoMapper(typeof(JournalMapper));
+builder.Services.AddAutoMapper(typeof(JournalRecordMapper));
 
 //Add JWT settings
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");
@@ -111,6 +118,8 @@ app.UseCors();
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
+
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

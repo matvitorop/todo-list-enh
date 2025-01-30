@@ -15,9 +15,7 @@ namespace todo_list_enh.Server.Repositories.Implementations
 
         public async Task<IEnumerable<Journal>> GetJournalsByUserIdAsync(int userId)
         {
-            return await _dbContext.Journals
-                .Where(j => j.UserId == userId)
-                .ToListAsync();
+            return await FindAsync(j => j.UserId == userId);
         }
 
         public async Task<Journal?> GetJournalWithRecordsAsync(int journalId)

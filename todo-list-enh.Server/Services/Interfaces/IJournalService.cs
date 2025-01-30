@@ -1,13 +1,14 @@
 ﻿using todo_list_enh.Server.Models.Domain;
+using todo_list_enh.Server.Models.DTO.Journal;
 
 namespace todo_list_enh.Server.Services.Interfaces
 {
     public interface IJournalService
     {
-        Task<IEnumerable<Journal>> GetJournalsByUserAsync(int userId);
-        Task<Journal?> GetJournalDetailsAsync(int journalId);
-        Task<Journal> AddJournalAsync(Journal journal);
-        Task<bool> DeleteJournalAsync(int journalId);
+        Task<IEnumerable<JournalDTO>> GetJournalsByUserAsync(int userId);
+        Task<JournalDTO> GetJournalDetailsAsync(int journalId, int userId);
+        Task<JournalDTO> AddJournalAsync(AddJournalDTO journal);
+        Task<bool> DeleteJournalAsync(int journalId, int userId);
     }
 
 }
