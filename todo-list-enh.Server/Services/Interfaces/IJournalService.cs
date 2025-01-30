@@ -6,9 +6,9 @@ namespace todo_list_enh.Server.Services.Interfaces
     public interface IJournalService
     {
         Task<IEnumerable<JournalDTO>> GetJournalsByUserAsync(int userId);
-        Task<JournalDTO?> GetJournalDetailsAsync(int journalId);
+        Task<JournalDTO> GetJournalDetailsAsync(int journalId, int userId);
         Task<JournalDTO> AddJournalAsync(AddJournalDTO journal);
-        Task<bool> DeleteJournalAsync(int journalId);
+        Task<bool> DeleteJournalAsync(int journalId, int userId);
     }
 
 }

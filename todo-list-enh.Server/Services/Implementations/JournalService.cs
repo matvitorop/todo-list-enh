@@ -24,13 +24,12 @@ namespace todo_list_enh.Server.Services.Implementations
             return _mapper.Map<List<JournalDTO>>(journals);
         }
 
-        public async Task<JournalDTO?> GetJournalDetailsAsync(int journalId)
+        public async Task<JournalDTO> GetJournalDetailsAsync(int journalId, int userId)
         {
             var journal = await _journalRepository.GetJournalWithRecordsAsync(journalId);
-            if (journal == null)
-            {
-                return null;
-            }
+            if (journal == null || journal.UserId != userId)
+                throw new UnauthorizedAccessException("Access denied.");
+
             return _mapper.Map<JournalDTO>(journal);
         }
 
@@ -43,13 +42,13 @@ namespace todo_list_enh.Server.Services.Implementations
             return _mapper.Map<JournalDTO>(journal);
         }
 
-        public async Task<bool> DeleteJournalAsync(int journalId)
+        public async Task<bool> DeleteJournalAsync(int journalId, int userId)
         {
             var journal = await _journalRepository.GetByIdAsync(journalId);
-            if (journal == null)
-            {
-                return false;
-            }
+            
+            if (journal == null) return false;
+            if (journal.UserId != userId)
+                throw new UnauthorizedAccessException("Access denied.");
 
             await _journalRepository.DeleteAsync(journal);
             return true;

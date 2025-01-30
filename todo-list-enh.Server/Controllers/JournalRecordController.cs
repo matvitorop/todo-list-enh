@@ -35,7 +35,7 @@ namespace todo_list_enh.Server.Controllers
             var userId = this.GetUserIdOrThrowUnauthorized();
 
             var recordDTO = await _journalRecordService.GetRecordDetailsAsync(recordId, userId);
-            return recordDTO != null ? Ok(recordDTO) : NotFound("Record not found or access denied.");
+            return recordDTO != null ? Ok(recordDTO) : NotFound("Record not found.");
         }
 
         [Authorize]
@@ -56,7 +56,7 @@ namespace todo_list_enh.Server.Controllers
             var userId = this.GetUserIdOrThrowUnauthorized();
 
             var success = await _journalRecordService.DeleteRecordAsync(recordId, userId);
-            return success ? NoContent() : NotFound("Record not found or access denied.");
+            return success ? NoContent() : NotFound("Record not found");
         }
     }
 }

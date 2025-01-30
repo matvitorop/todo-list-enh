@@ -114,7 +114,7 @@ app.UseCors();
 app.UseDefaultFiles();
 app.UseStaticFiles();
 
-app.UseMiddleware<ErrorHandlingMiddleware>();
+//app.UseMiddleware<ErrorHandlingMiddleware>();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
