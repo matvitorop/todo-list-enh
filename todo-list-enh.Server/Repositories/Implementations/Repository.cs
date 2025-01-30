@@ -47,5 +47,15 @@ namespace todo_list_enh.Server.Repositories.Implementations
             _context.Set<T>().Remove(entity);
             await _context.SaveChangesAsync();
         }
+
+        public async Task DeleteWhereAsync(Expression<Func<T, bool>> predicate)
+        {
+            var entities = await _context.Set<T>().Where(predicate).ToListAsync();
+            if (entities.Any())
+            {
+                _context.Set<T>().RemoveRange(entities);
+                await _context.SaveChangesAsync();
+            }
+        }
     }
 }

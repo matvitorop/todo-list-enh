@@ -10,5 +10,6 @@ namespace todo_list_enh.Server.Repositories.Interfaces
         Task AddAsync(T entity);
         Task UpdateAsync(T entity);
         Task DeleteAsync(T entity);
+        Task DeleteWhereAsync(Expression<Func<T, bool>> predicate);
     }
 }

@@ -10,11 +10,13 @@ namespace todo_list_enh.Server.Services.Implementations
     public class JournalService : IJournalService
     {
         private readonly IJournalRepository _journalRepository;
+        private readonly IJournalRecordRepository _journalRecordRepository;
         private readonly IMapper _mapper;
 
-        public JournalService(IJournalRepository journalRepository, IMapper mapper)
+        public JournalService(IJournalRepository journalRepository, IJournalRecordRepository journalRecordRepository, IMapper mapper)
         {
             _journalRepository = journalRepository;
+            _journalRecordRepository = journalRecordRepository;
             _mapper = mapper;
         }
 
@@ -49,7 +51,7 @@ namespace todo_list_enh.Server.Services.Implementations
             if (journal == null) return false;
             if (journal.UserId != userId)
                 throw new UnauthorizedAccessException("Access denied.");
-
+            await _journalRecordRepository.DeleteRecordsByJournalIdAsync(journalId);
             await _journalRepository.DeleteAsync(journal);
             return true;
         }

@@ -13,5 +13,9 @@ namespace todo_list_enh.Server.Repositories.Implementations
         {
             return await FindAsync(r => r.JournalId == journalId);
         }
+        public async System.Threading.Tasks.Task DeleteRecordsByJournalIdAsync(int journalId)
+        {
+            await DeleteWhereAsync(r => r.JournalId == journalId);
+        }
     }
 }
