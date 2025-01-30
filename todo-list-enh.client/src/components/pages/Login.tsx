@@ -1,9 +1,11 @@
 import { useNavigate } from "react-router-dom";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { TextField, Button, Container, Typography, Alert, Box } from "@mui/material";
-import FormInput from "../reusable-items/FormInput"
+import { Button, Container, Typography, Alert, Box } from "@mui/material";
+import FormInput from "../reusable-items/FormInput";
+import { AuthRequest } from "../Interfaces/UserInterfaces";
+import { loginUser } from "../reusable-items/AuthController";
 
 const schema = yup.object().shape({
     email: yup.string().email("Invalid email format").required("Email is required"),
@@ -21,24 +23,9 @@ export default function Login() {
         resolver: yupResolver(schema),
     });
 
-    const onSubmit = async (data) => {
+    const onSubmit = async (data : AuthRequest ) => {
         try {
-            const response = await fetch("https://localhost:7289/Users/login", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    username: "undefined",
-                    email: data.email,
-                    password: data.password,
-                    createdAt: new Date().toISOString(),
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Wrong email or password.");
-            }
-
-            const responseData = await response.json();
+            const responseData = await loginUser(data.email, data.password);
             localStorage.setItem("token", responseData.token);
             localStorage.setItem("user", JSON.stringify(responseData.user));
             navigate("/dashboard");

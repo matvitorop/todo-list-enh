@@ -1,12 +1,6 @@
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
-
-interface User {
-    id: number;
-    username: string;
-    email: string;
-    createdAt: string;
-}
+import { User } from "../Interfaces/UserInterfaces"
 
 export default function Layout() {
     const [user, setUser] = useState<User | null>(null);
