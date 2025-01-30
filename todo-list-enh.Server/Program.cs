@@ -14,7 +14,7 @@ using todo_list_enh.Server.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Додаємо сервіси до контейнера.
+// Adding services to container
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -52,7 +52,7 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 
-// Додаємо CORS перед створенням додатку
+// Adding CORS for using react
 builder.Services.AddCors(options =>
 {
     options.AddDefaultPolicy(policy =>
@@ -65,14 +65,16 @@ builder.Services.AddCors(options =>
 
 // Adding new service
 builder.Services.AddScoped<DatabaseService>();
+
 // Add dbContext to services
 builder.Services.AddDbContext<ETLDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-//Adding user Repository
-builder.Services.AddScoped<IUserRepository, SQLUserRepository>();
+//Adding Repositories
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<IJournalRepository, JournalRepository>();
 builder.Services.AddScoped<IJournalService, JournalService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 
 //Adding automapper for users

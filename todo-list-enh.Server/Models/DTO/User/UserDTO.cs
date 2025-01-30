@@ -1,7 +1,7 @@
 ﻿using todo_list_enh.Server.Models.Domain;
 using Task = todo_list_enh.Server.Models.Domain.Task;
 
-namespace todo_list_enh.Server.Models.DTO
+namespace todo_list_enh.Server.Models.DTO.User
 {
     public class UserDTO
     {

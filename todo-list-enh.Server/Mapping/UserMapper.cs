@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using todo_list_enh.Server.Models.Domain;
-using todo_list_enh.Server.Models.DTO;
+using todo_list_enh.Server.Models.DTO.User;
 
 namespace todo_list_enh.Server.Mapping
 {
