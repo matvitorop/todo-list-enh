@@ -1,24 +1,9 @@
-import { Link, useNavigate, Outlet } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { User } from "../Interfaces/UserInterfaces"
+import { Link, Outlet } from "react-router-dom";
+import { useUserStore } from "../state-manager/useStore";
+
 
 export default function Layout() {
-    const [user, setUser] = useState<User | null>(null);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        const storedUser = localStorage.getItem("user");
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
-        }
-    }, []);
-
-    const handleLogout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
-        setUser(null);
-        navigate("/login");
-    };
+    const { user, logout } = useUserStore();
 
     return (
         <div>
@@ -27,8 +12,8 @@ export default function Layout() {
                     <Link to="/" style={{ color: "white", textDecoration: "none" }}>Main</Link>
                     {user ? (
                         <div>
-                            <span>{user.username}</span>  {}
-                            <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
+                            <span>{user.username}</span>
+                            <button onClick={logout} style={{ marginLeft: "10px" }}>Logout</button>
                         </div>
                     ) : (
                         <Link to="/login" style={{ color: "white", textDecoration: "none" }}>Log in</Link>
@@ -44,3 +29,4 @@ export default function Layout() {
         </div>
     );
 }
+

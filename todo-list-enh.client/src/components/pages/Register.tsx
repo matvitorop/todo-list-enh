@@ -6,6 +6,7 @@ import { Button, Container, Typography, Box, Alert } from "@mui/material";
 import { register } from "../reusable-items/AuthController";
 import { AuthRequest } from "../Interfaces/UserInterfaces";
 import FormInput from "../reusable-items/FormInput";
+import { useUserStore } from "../state-manager/useStore";
 
 const schema = yup.object().shape({
     username: yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
@@ -24,6 +25,9 @@ export default function Register() {
             const result = await register(data);
             localStorage.setItem("token", result.token);
             localStorage.setItem("user", JSON.stringify(result.user));
+
+            useUserStore.getState().setUser(result.user);
+
             navigate("/dashboard");
         } catch (error) {
             setError("root", { message: "Registration failed. The email may already be in use." });

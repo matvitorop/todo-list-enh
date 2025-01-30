@@ -6,6 +6,7 @@ import { Button, Container, Typography, Alert, Box } from "@mui/material";
 import FormInput from "../reusable-items/FormInput";
 import { AuthRequest } from "../Interfaces/UserInterfaces";
 import { loginUser } from "../reusable-items/AuthController";
+import { useUserStore } from "../state-manager/useStore";
 
 const schema = yup.object().shape({
     email: yup.string().email("Invalid email format").required("Email is required"),
@@ -28,6 +29,9 @@ export default function Login() {
             const responseData = await loginUser(data.email, data.password);
             localStorage.setItem("token", responseData.token);
             localStorage.setItem("user", JSON.stringify(responseData.user));
+
+            useUserStore.getState().setUser(responseData.user);
+
             navigate("/dashboard");
         } catch (err) {
             setError("email", { type: "manual", message: "Wrong email or password." });
