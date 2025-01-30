@@ -1,21 +1,28 @@
 import { Link, useNavigate, Outlet } from "react-router-dom";
 import { useEffect, useState } from "react";
 
+interface User {
+    id: number;
+    username: string;
+    email: string;
+    createdAt: string;
+}
+
 export default function Layout() {
-    const [username, setUsername] = useState<string | null>(null);
+    const [user, setUser] = useState<User | null>(null);
     const navigate = useNavigate();
 
     useEffect(() => {
-        const storedUsername = localStorage.getItem("username");
-        if (storedUsername) {
-            setUsername(storedUsername);
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            setUser(JSON.parse(storedUser));
         }
     }, []);
 
     const handleLogout = () => {
         localStorage.removeItem("token");
-        localStorage.removeItem("username");
-        setUsername(null);
+        localStorage.removeItem("user");
+        setUser(null);
         navigate("/login");
     };
 
@@ -24,9 +31,9 @@ export default function Layout() {
             <header style={{ backgroundColor: '#333', padding: '10px', color: '#fff', textAlign: 'center' }}>
                 <nav style={{ display: "flex", justifyContent: "space-between", padding: "10px", background: "#282c34", color: "white" }}>
                     <Link to="/" style={{ color: "white", textDecoration: "none" }}>Main</Link>
-                    {username ? (
+                    {user ? (
                         <div>
-                            <span>{localStorage.getItem("username")}</span>
+                            <span>{user.username}</span>  {}
                             <button onClick={handleLogout} style={{ marginLeft: "10px" }}>Logout</button>
                         </div>
                     ) : (
