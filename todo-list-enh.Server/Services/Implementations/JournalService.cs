@@ -35,10 +35,11 @@ namespace todo_list_enh.Server.Services.Implementations
             return _mapper.Map<JournalDTO>(journal);
         }
 
-        public async Task<JournalDTO> AddJournalAsync(AddJournalDTO journalDTO)
+        public async Task<JournalDTO> AddJournalAsync(AddJournalDTO journalDTO, int userId)
         {
             var journal = _mapper.Map<Journal>(journalDTO);
             journal.CreatedAt = DateTime.UtcNow;
+            journal.UserId = userId;
 
             await _journalRepository.AddAsync(journal);
             return _mapper.Map<JournalDTO>(journal);

@@ -53,7 +53,7 @@ namespace todo_list_enh.Server.Controllers
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var createdJournalDTO = await _journalService.AddJournalAsync(journalDTO);
+            var createdJournalDTO = await _journalService.AddJournalAsync(journalDTO, userId);
             return CreatedAtAction(nameof(GetJournalDetails), new { journalId = createdJournalDTO.Id }, createdJournalDTO);
         }
 
