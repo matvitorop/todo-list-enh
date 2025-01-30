@@ -5,10 +5,14 @@ namespace todo_list_enh.Server.Extensions
 {
     public static class ControllerExtensions
     {
-        public static int? GetUserIdOrNull(this ControllerBase controller)
+        public static int GetUserIdOrThrowUnauthorized(this ControllerBase controller)
         {
             var userIdStr = controller.User.FindFirstValue(ClaimTypes.NameIdentifier);
-            return int.TryParse(userIdStr, out var userId) ? userId : null;
+            if (!int.TryParse(userIdStr, out var userId))
+            {
+                throw new UnauthorizedAccessException("User ID is missing in the token.");
+            }
+            return userId;
         }
     }
 }

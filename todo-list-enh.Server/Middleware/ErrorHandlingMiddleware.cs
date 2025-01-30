@@ -15,10 +15,10 @@
             {
                 await _next(context);
             }
-            catch (UnauthorizedAccessException)
+            catch (UnauthorizedAccessException ex)
             {
                 context.Response.StatusCode = StatusCodes.Status403Forbidden;
-                await context.Response.WriteAsync("Access denied.");
+                await context.Response.WriteAsync(ex.Message);
             }
             catch (Exception ex)
             {

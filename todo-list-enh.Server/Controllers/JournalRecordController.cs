@@ -22,10 +22,9 @@ namespace todo_list_enh.Server.Controllers
         [HttpGet]
         public async Task<IActionResult> GetRecordsByJournal(int journalId)
         {
-            var userId = this.GetUserIdOrNull();
-            if (userId == null) return Unauthorized("User ID is missing in the token.");
+            var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var recordsDTO = await _journalRecordService.GetRecordsByJournalAsync(journalId, userId.Value);
+            var recordsDTO = await _journalRecordService.GetRecordsByJournalAsync(journalId, userId);
             return Ok(recordsDTO);
         }
 
@@ -33,10 +32,9 @@ namespace todo_list_enh.Server.Controllers
         [HttpGet("{recordId:int}")]
         public async Task<IActionResult> GetRecordDetails(int journalId, int recordId)
         {
-            var userId = this.GetUserIdOrNull();
-            if (userId == null) return Unauthorized("User ID is missing in the token.");
+            var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var recordDTO = await _journalRecordService.GetRecordDetailsAsync(recordId, userId.Value);
+            var recordDTO = await _journalRecordService.GetRecordDetailsAsync(recordId, userId);
             return recordDTO != null ? Ok(recordDTO) : NotFound("Record not found or access denied.");
         }
 
@@ -44,11 +42,10 @@ namespace todo_list_enh.Server.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRecord(int journalId, [FromBody] AddJournalRecordDTO recordDTO)
         {
-            var userId = this.GetUserIdOrNull();
-            if (userId == null) return Unauthorized("User ID is missing in the token.");
+            var userId = this.GetUserIdOrThrowUnauthorized();
 
             recordDTO.JournalId = journalId;
-            var createdRecord = await _journalRecordService.AddRecordAsync(recordDTO, userId.Value);
+            var createdRecord = await _journalRecordService.AddRecordAsync(recordDTO, userId);
             return CreatedAtAction(nameof(GetRecordDetails), new { journalId, recordId = createdRecord.Id }, createdRecord);
         }
 
@@ -56,10 +53,9 @@ namespace todo_list_enh.Server.Controllers
         [HttpDelete("{recordId:int}")]
         public async Task<IActionResult> DeleteRecord(int journalId, int recordId)
         {
-            var userId = this.GetUserIdOrNull();
-            if (userId == null) return Unauthorized("User ID is missing in the token.");
+            var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var success = await _journalRecordService.DeleteRecordAsync(recordId, userId.Value);
+            var success = await _journalRecordService.DeleteRecordAsync(recordId, userId);
             return success ? NoContent() : NotFound("Record not found or access denied.");
         }
     }
