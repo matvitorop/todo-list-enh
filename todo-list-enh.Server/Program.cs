@@ -87,6 +87,7 @@ builder.Services.AddScoped<IJournalRecordService, JournalRecordService>();
 builder.Services.AddAutoMapper(typeof(UserMapper));
 builder.Services.AddAutoMapper(typeof(JournalMapper));
 builder.Services.AddAutoMapper(typeof(JournalRecordMapper));
+builder.Services.AddAutoMapper(typeof(ActivityMapper));
 
 //Add JWT settings
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

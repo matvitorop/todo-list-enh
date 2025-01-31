@@ -12,7 +12,7 @@
         Task<bool> DeleteGoal(int activityId, int goalId);
         Task<bool> DeleteItem<T>(int activityId, int itemId) where T : class;
         Task<bool> ChangeTaskOrder(int activityId, int taskIdToReplace, int taskIdToRemove);
-        Task<bool> AddTask(int activityId, int taskId);
-        Task<bool> AddGoal(int activityId, int goalId);
+        Task<bool> AddTask(TTask task);
+        Task<bool> AddGoal(TGoal goal);
     }
 }

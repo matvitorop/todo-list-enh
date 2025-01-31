@@ -104,33 +104,16 @@ namespace todo_list_enh.Server.Repositories.Implementations
             return true;
         }
 
-        public async Task<bool> AddTask(int activityId, int taskId)
+        public async Task<bool> AddTask(TTask task)
         {
-            var newTask = (TTask)Activator.CreateInstance(typeof(TTask))!;
-            _context.Entry(newTask).Property("TaskId").CurrentValue = taskId;
-
-            if (typeof(TTask).GetProperty("WeekId") != null)
-                _context.Entry(newTask).Property("WeekId").CurrentValue = activityId;
-            else
-                _context.Entry(newTask).Property("DayId").CurrentValue = activityId;
-
-            await _tasks.AddAsync(newTask);
-            await _context.SaveChangesAsync();
+            await _taskRepository.AddAsync(task);
             return true;
+            
         }
 
-        public async Task<bool> AddGoal(int activityId, int goalId)
+        public async Task<bool> AddGoal(TGoal goal)
         {
-            var newGoal = (TGoal)Activator.CreateInstance(typeof(TGoal))!;
-            _context.Entry(newGoal).Property("GoalId").CurrentValue = goalId;
-
-            if (typeof(TGoal).GetProperty("WeekId") != null)
-                _context.Entry(newGoal).Property("WeekId").CurrentValue = activityId;
-            else
-                _context.Entry(newGoal).Property("DayId").CurrentValue = activityId;
-
-            await _goals.AddAsync(newGoal);
-            await _context.SaveChangesAsync();
+            await _goalRepository.AddAsync(goal);
             return true;
         }
     }
