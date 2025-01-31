@@ -26,19 +26,15 @@ namespace todo_list_enh.Server.Controllers
         [Route("my")]
         public async Task<IActionResult> GetJournalsByUser()
         {
-            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
-            if (string.IsNullOrEmpty(userId))
-            {
-                return Unauthorized("User ID is missing in the token.");
-            }
+            var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var journalsDTO = await _journalService.GetJournalsByUserAsync(int.Parse(userId));
+            var journalsDTO = await _journalService.GetJournalsByUserAsync(userId);
             return Ok(journalsDTO);
         }
 
         [Authorize]
         [HttpGet]
-        [Route("{journalId:int}")]
+        [Route("details/{journalId:int}")]
         public async Task<IActionResult> GetJournalDetails(int journalId)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
@@ -59,7 +55,7 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpDelete]
-        [Route("{journalId}")]
+        [Route("{journalId:int}")]
         public async Task<IActionResult> DeleteJournal(int journalId)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();

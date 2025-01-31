@@ -61,5 +61,17 @@ namespace todo_list_enh.Server.Repositories.Implementations
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task<T?> GetWithIncludesAsync(Expression<Func<T, bool>> predicate, params Expression<Func<T, object>>[] includes)
+        {
+            IQueryable<T> query = _context.Set<T>();
+
+            foreach (var include in includes)
+            {
+                query = query.Include(include);
+            }
+
+            return await query.FirstOrDefaultAsync(predicate);
+        }
     }
 }

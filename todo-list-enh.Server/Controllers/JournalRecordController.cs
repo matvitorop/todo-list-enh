@@ -20,6 +20,7 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpGet]
+        [Route("{journalId:int}/records")]
         public async Task<IActionResult> GetRecordsByJournal(int journalId)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
@@ -30,7 +31,7 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpGet("{recordId:int}")]
-        public async Task<IActionResult> GetRecordDetails(int journalId, int recordId)
+        public async Task<IActionResult> GetRecordDetails(int recordId)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 
@@ -40,18 +41,17 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> AddRecord(int journalId, [FromBody] AddJournalRecordDTO recordDTO)
+        public async Task<IActionResult> AddRecord([FromBody] AddJournalRecordDTO recordDTO)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 
-            recordDTO.JournalId = journalId;
             var createdRecord = await _journalRecordService.AddRecordAsync(recordDTO, userId);
-            return CreatedAtAction(nameof(GetRecordDetails), new { journalId, recordId = createdRecord.Id }, createdRecord);
+            return CreatedAtAction(nameof(GetRecordDetails), new { recordDTO.JournalId, recordId = createdRecord.Id }, createdRecord);
         }
 
         [Authorize]
         [HttpDelete("{recordId:int}")]
-        public async Task<IActionResult> DeleteRecord(int journalId, int recordId)
+        public async Task<IActionResult> DeleteRecord(int recordId)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 

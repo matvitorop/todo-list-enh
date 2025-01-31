@@ -20,9 +20,7 @@ namespace todo_list_enh.Server.Repositories.Implementations
 
         public async Task<Journal?> GetJournalWithRecordsAsync(int journalId)
         {
-            return await _dbContext.Journals
-                .Include(j => j.JournalRecords)
-                .FirstOrDefaultAsync(j => j.Id == journalId);
+            return await GetWithIncludesAsync(j => j.Id == journalId, j => j.JournalRecords);
         }
     }
 
