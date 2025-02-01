@@ -7,6 +7,7 @@ using System.Text;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Mapping;
 using todo_list_enh.Server.Middleware;
+using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
@@ -81,7 +82,10 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJournalRecordRepository, JournalRecordRepository>();
 builder.Services.AddScoped<IJournalRecordService, JournalRecordService>();
 
-
+builder.Services.AddScoped<IActivityRepository<Week, WeekTask, WeekGoal>, ActivityRepository<Week, WeekTask, WeekGoal>>();
+builder.Services.AddScoped<IActivityRepository<Day, DailyTask, DailyGoal>, ActivityRepository<Day, DailyTask, DailyGoal>>();
+builder.Services.AddScoped<IActivityService<Week, WeekTask>, ActivityService<Week, WeekTask>>();
+//builder.Services.AddScoped<IActivityService<Day, DailyTask>, ActivityService<Day, DailyTask>>();
 
 //Adding automappers
 builder.Services.AddAutoMapper(typeof(UserMapper));
