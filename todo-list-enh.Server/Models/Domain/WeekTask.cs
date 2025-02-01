@@ -10,7 +10,7 @@ namespace todo_list_enh.Server.Models.Domain
         public int Id { get; set; }
 
         [ForeignKey("Week")]
-        public int WeekId { get; set; }
+        public int periodId { get; set; }
 
         [ForeignKey("Task")]
         public int TaskId { get; set; }
