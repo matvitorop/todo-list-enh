@@ -4,6 +4,7 @@ using System.Diagnostics;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO.Activity;
+using todo_list_enh.Server.Models.DTO.Goal;
 using todo_list_enh.Server.Models.DTO.Task;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
@@ -11,20 +12,22 @@ using todo_list_enh.Server.Services.Interfaces;
 
 namespace todo_list_enh.Server.Services.Implementations
 {
-    public class ActivityService<TActivity, TTask> : IActivityService<TActivity, TTask>
+    public class ActivityService<TActivity, TTask, TGoal> : IActivityService<TActivity, TTask, TGoal>
     where TActivity : class
     where TTask : class
+    where TGoal : class
     {
         private readonly ETLDbContext _context;
         private readonly IMapper _mapper;
-        private readonly Repository<Goal> _goals;
+        private readonly IGoalRepository _goals;
         private readonly ITaskRepository _tasks;
 
-        public ActivityService(ETLDbContext context, IMapper mapper, ITaskRepository taskRepository)
+        public ActivityService(ETLDbContext context, IMapper mapper, ITaskRepository taskRepository, IGoalRepository goalRepository)
         {
             _context = context;
             _mapper = mapper;
             this._tasks = taskRepository;
+            this._goals = goalRepository;
         }
 
         public async Task<bool> AddActivity(AddActivityDTO dto)
@@ -68,6 +71,36 @@ namespace todo_list_enh.Server.Services.Implementations
 
             return true;
         }
-    }
 
+        public async Task<bool> AddActivityGoal(AddGoalDTO goal, int activityId/*, data.order*/)
+        {
+            //var maxOrder = await _context.Set<TGoal>()
+            //    .Where(g => EF.Property<int>(g, "periodId") == activityId)
+            //    .MaxAsync(g => (int?)EF.Property<int>(g, "Order")) ?? 0;
+            //
+            //order = maxOrder + 1;
+
+            var existingActivityGoal = await _context.Set<TGoal>().FirstOrDefaultAsync(g =>
+                EF.Property<int>(g, "periodId") == activityId /*&&
+                EF.Property<int>(g, "Order") == order*/);
+
+            if (existingActivityGoal != null)
+            {
+                return false;
+            }
+
+            var newGoal = _mapper.Map<Goal>(goal);
+            await _goals.AddAsync(newGoal);
+
+            var newActivityGoal = Activator.CreateInstance<TGoal>();
+            typeof(TGoal).GetProperty("periodId")?.SetValue(newActivityGoal, activityId);
+            typeof(TGoal).GetProperty("GoalId")?.SetValue(newActivityGoal, newGoal.Id);
+            /*typeof(TGoal).GetProperty("Order")?.SetValue(newActivityGoal, order);*/
+
+            await _context.Set<TGoal>().AddAsync(newActivityGoal);
+            await _context.SaveChangesAsync();
+
+            return true;
+        }
+    }
 }

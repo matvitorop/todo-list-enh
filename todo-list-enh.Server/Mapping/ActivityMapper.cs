@@ -18,6 +18,8 @@ namespace todo_list_enh.Server.Mapping
             CreateMap<AddTaskDTO, Models.Domain.Task>();
 
             CreateMap<Goal, GoalDTO>();
+            
+            CreateMap<AddGoalDTO, Goal>();
         }
     }
 }

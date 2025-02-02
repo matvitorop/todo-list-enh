@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Repositories.Implementations;
+using todo_list_enh.Server.Models.DTO.Goal;
 
 namespace todo_list_enh.Server.Controllers
 {
@@ -23,19 +24,33 @@ namespace todo_list_enh.Server.Controllers
     public class WeekController : ControllerBase
     {
         private readonly ILogger<UsersController> _logger;
-        private readonly IActivityRepository<Week, WeekTask, WeekGoal> _activityRepository;
-        private readonly IActivityService<Week, WeekTask> _activityService;
+
+        private readonly IActivityRepository<Week, WeekTask, WeekGoal> _weekActivityRepository;
+        private readonly IActivityService<Week, WeekTask, WeekGoal> _weekActivityService;
+
+        private readonly IActivityRepository<Day, DailyTask, WeekGoal> _dayActivityRepository;
+        private readonly IActivityService<Day, DailyTask, DailyGoal> _dayActivityService;
 
         public WeekController(
             ILogger<UsersController> logger,
-            IActivityRepository<Week, WeekTask, WeekGoal> activityRepository,
+            
+            IActivityRepository<Week, WeekTask, WeekGoal> weekActivityRepository,
+            //IActivityRepository<Day, DailyTask, WeekGoal> dayActivityRepository,
+            
             ITaskRepository taskRepository,
-            IActivityService<Week, WeekTask> activityService
+            IGoalRepository goalRepository,
+
+            IActivityService<Week, WeekTask, WeekGoal> weekActivityService
+            //IActivityService<Day, DailyTask> dayActivityService
         )
         {
             this._logger = logger;
-            this._activityRepository = activityRepository;
-            this._activityService = activityService;
+
+            this._weekActivityRepository = weekActivityRepository;
+            //this._dayActivityRepository = dayActivityRepository;
+
+            this._weekActivityService = weekActivityService;
+            //this._dayActivityService = dayActivityService;
         }
 
         [Authorize]
@@ -48,7 +63,7 @@ namespace todo_list_enh.Server.Controllers
             activity.UserId = userId;
 
 
-            if (!await _activityService.AddActivity(activity))
+            if (!await _weekActivityService.AddActivity(activity))
             {
                 return BadRequest("User already exists.");
             }
@@ -63,14 +78,31 @@ namespace todo_list_enh.Server.Controllers
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
             
-            var result = await _activityService.AddActivityTask(data.AddTask, data.ActivityId, data.order);
+            var result = await _weekActivityService.AddActivityTask(data.AddTask, data.ActivityId, data.order);
             
             
             if (result)
             {
-                return Ok("Activity created successfully.");
+                return Ok("Task created successfully.");
             }
             
+            return BadRequest("Data error.");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("addGoal")]
+        public async Task<IActionResult> AddGoal([FromBody] AddActivityGoalDTO data)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _weekActivityService.AddActivityGoal(data.AddGoal, data.ActivityId/*, data.order*/);
+
+            if (result)
+            {
+                return Ok("Goal created successfully.");
+            }
+
             return BadRequest("Data error.");
         }
     }
