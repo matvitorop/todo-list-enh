@@ -28,8 +28,8 @@ namespace todo_list_enh.Server.Controllers
         private readonly IActivityRepository<Week, WeekTask, WeekGoal> _weekActivityRepository;
         private readonly IActivityService<Week, WeekTask, WeekGoal> _weekActivityService;
 
-        private readonly IActivityRepository<Day, DailyTask, WeekGoal> _dayActivityRepository;
-        private readonly IActivityService<Day, DailyTask, DailyGoal> _dayActivityService;
+        //private readonly IActivityRepository<Day, DailyTask, WeekGoal> _dayActivityRepository;
+        //private readonly IActivityService<Day, DailyTask, DailyGoal> _dayActivityService;
 
         public WeekController(
             ILogger<UsersController> logger,
@@ -96,7 +96,7 @@ namespace todo_list_enh.Server.Controllers
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 
-            var result = await _weekActivityService.AddActivityGoal(data.AddGoal, data.ActivityId/*, data.order*/);
+            var result = await _weekActivityService.AddActivityGoal(data.AddGoal, data.ActivityId);
 
             if (result)
             {
