@@ -12,7 +12,7 @@ namespace todo_list_enh.Server.Models.DTO.Task
         public bool IsStrict { get; set; }
         public bool IsCompleted { get; set; }
         public bool IsTemplate { get; set; }
-        public TimeSpan? StartTime { get; set; }
-        public TimeSpan? EndTime { get; set; }
+        public TimeSpan? StartTime { get; set; } = TimeSpan.Zero;
+        public TimeSpan? EndTime { get; set; } = TimeSpan.Zero;
     }
 }

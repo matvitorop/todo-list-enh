@@ -6,6 +6,6 @@ namespace todo_list_enh.Server.Services.Interfaces
     public interface IActivityService<TActivity, TTask>
     {
         Task<bool> AddActivity(AddActivityDTO dto);
-        Task<bool> AddActivityTask(TActivity activity, TaskDTO task, int order);
+        Task<bool> AddActivityTask(int activityId, AddTaskDTO task, int order);
     }
 }

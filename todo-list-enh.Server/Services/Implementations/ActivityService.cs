@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using System.Diagnostics;
 using todo_list_enh.Server.Data;
+using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO.Activity;
 using todo_list_enh.Server.Models.DTO.Task;
+using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Services.Interfaces;
 
 namespace todo_list_enh.Server.Services.Implementations
@@ -13,6 +16,8 @@ namespace todo_list_enh.Server.Services.Implementations
     {
         private readonly ETLDbContext _context;
         private readonly IMapper _mapper;
+        private readonly Repository<Models.Domain.Task> _tasks;
+        private readonly Repository<Goal> _goals;
 
         public ActivityService(ETLDbContext context, IMapper mapper)
         {
@@ -30,9 +35,36 @@ namespace todo_list_enh.Server.Services.Implementations
             return true;
         }
 
-        public async Task<bool> AddActivityTask(TActivity activity, TaskDTO task, int order)
+        public async Task<bool> AddActivityTask(int activityId, AddTaskDTO task, int order)
         {
-            throw new NotImplementedException();
+            var maxOrder = await _context.Set<TTask>()
+                .Where(t => EF.Property<int>(t, "periodId") == activityId)
+                .MaxAsync(t => (int?)EF.Property<int>(t, "Order")) ?? 0;
+
+            order = maxOrder + 1;
+
+            var existingActivityTask = await _context.Set<TTask>().FirstOrDefaultAsync(t =>
+                EF.Property<int>(t, "periodId") == activityId &&
+                EF.Property<int>(t, "Order") == order);
+
+            if (existingActivityTask != null)
+            {
+                return false;
+            }
+
+            var newTask = _mapper.Map<Models.Domain.Task>(task);
+            await _tasks.AddAsync(newTask);
+            await _context.SaveChangesAsync();
+
+            var newActivityTask = Activator.CreateInstance<TTask>();
+            typeof(TTask).GetProperty("periodId")?.SetValue(newActivityTask, activityId);
+            typeof(TTask).GetProperty("taskId")?.SetValue(newActivityTask, newTask.Id);
+            typeof(TTask).GetProperty("order")?.SetValue(newActivityTask, order);
+
+            await _context.Set<TTask>().AddAsync(newActivityTask);
+            await _context.SaveChangesAsync();
+
+            return true;
         }
     }
 

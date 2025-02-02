@@ -10,6 +10,7 @@ using todo_list_enh.Server.Models.DTO.User;
 using todo_list_enh.Server.Models.DTO.Activity;
 using Microsoft.AspNetCore.Authorization;
 using todo_list_enh.Server.Extensions;
+using todo_list_enh.Server.Models.DTO.Task;
 
 namespace todo_list_enh.Server.Controllers
 {
@@ -32,7 +33,7 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> Register()
+        public async Task<IActionResult> CreateWeek()
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
             
@@ -43,6 +44,24 @@ namespace todo_list_enh.Server.Controllers
             if (!await _activityService.AddActivity(activity))
             {
                 return BadRequest("User already exists.");
+            }
+
+            return Ok("activity created successfully");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("addTask")]
+        public async Task<IActionResult> AddTask([FromBody] AddActivityTaskDTO data)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _activityService.AddActivityTask(data.ActivityId, data.AddTask, data.order);
+
+
+            if (result)
+            {
+                return Ok("activity created successfully");
             }
 
             return Ok("activity created successfully");
