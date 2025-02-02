@@ -25,26 +25,17 @@ namespace todo_list_enh.Server.Controllers
         private readonly ILogger<UsersController> _logger;
         private readonly IActivityRepository<Week, WeekTask, WeekGoal> _activityRepository;
         private readonly IActivityService<Week, WeekTask> _activityService;
-        
-        private readonly IMapper mapper;
-        private readonly ETLDbContext _context;
-        private readonly ITaskRepository _tasks;
 
         public WeekController(
             ILogger<UsersController> logger,
             IActivityRepository<Week, WeekTask, WeekGoal> activityRepository,
-            IMapper mapper,
-            IActivityService<Week, WeekTask> activityService,
-            ETLDbContext context,
-            ITaskRepository taskRepository
+            ITaskRepository taskRepository,
+            IActivityService<Week, WeekTask> activityService
         )
         {
             this._logger = logger;
             this._activityRepository = activityRepository;
-            this.mapper = mapper;
             this._activityService = activityService;
-            this._context = context;
-            this._tasks = taskRepository;
         }
 
         [Authorize]
@@ -72,7 +63,7 @@ namespace todo_list_enh.Server.Controllers
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
             
-            var result = await _activityService.AddActivityTask(data.ActivityId, data.AddTask, data.order);
+            var result = await _activityService.AddActivityTask(data.AddTask, data.ActivityId, data.order);
             
             
             if (result)

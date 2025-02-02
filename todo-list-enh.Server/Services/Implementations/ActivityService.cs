@@ -37,7 +37,7 @@ namespace todo_list_enh.Server.Services.Implementations
             return true;
         }
 
-        public async Task<bool> AddActivityTask(int activityId, AddTaskDTO task, int order)
+        public async Task<bool> AddActivityTask(AddTaskDTO task, int activityId, int order)
         {
             var maxOrder = await _context.Set<TTask>()
                 .Where(t => EF.Property<int>(t, "periodId") == activityId)
@@ -58,6 +58,7 @@ namespace todo_list_enh.Server.Services.Implementations
             await _tasks.AddAsync(newTask);
 
             var newActivityTask = Activator.CreateInstance<TTask>();
+            // names of model's props
             typeof(TTask).GetProperty("periodId")?.SetValue(newActivityTask, activityId);
             typeof(TTask).GetProperty("TaskId")?.SetValue(newActivityTask, newTask.Id);
             typeof(TTask).GetProperty("Order")?.SetValue(newActivityTask, order);
