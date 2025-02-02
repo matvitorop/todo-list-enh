@@ -6,6 +6,7 @@ using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Models.DTO.Activity;
 using todo_list_enh.Server.Models.DTO.Task;
 using todo_list_enh.Server.Repositories.Implementations;
+using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services.Interfaces;
 
 namespace todo_list_enh.Server.Services.Implementations
@@ -16,13 +17,14 @@ namespace todo_list_enh.Server.Services.Implementations
     {
         private readonly ETLDbContext _context;
         private readonly IMapper _mapper;
-        private readonly Repository<Models.Domain.Task> _tasks;
         private readonly Repository<Goal> _goals;
+        private readonly ITaskRepository _tasks;
 
-        public ActivityService(ETLDbContext context, IMapper mapper)
+        public ActivityService(ETLDbContext context, IMapper mapper, ITaskRepository taskRepository)
         {
             _context = context;
             _mapper = mapper;
+            this._tasks = taskRepository;
         }
 
         public async Task<bool> AddActivity(AddActivityDTO dto)
@@ -54,12 +56,11 @@ namespace todo_list_enh.Server.Services.Implementations
 
             var newTask = _mapper.Map<Models.Domain.Task>(task);
             await _tasks.AddAsync(newTask);
-            await _context.SaveChangesAsync();
 
             var newActivityTask = Activator.CreateInstance<TTask>();
             typeof(TTask).GetProperty("periodId")?.SetValue(newActivityTask, activityId);
-            typeof(TTask).GetProperty("taskId")?.SetValue(newActivityTask, newTask.Id);
-            typeof(TTask).GetProperty("order")?.SetValue(newActivityTask, order);
+            typeof(TTask).GetProperty("TaskId")?.SetValue(newActivityTask, newTask.Id);
+            typeof(TTask).GetProperty("Order")?.SetValue(newActivityTask, order);
 
             await _context.Set<TTask>().AddAsync(newActivityTask);
             await _context.SaveChangesAsync();

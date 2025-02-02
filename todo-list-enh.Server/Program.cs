@@ -82,6 +82,8 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJournalRecordRepository, JournalRecordRepository>();
 builder.Services.AddScoped<IJournalRecordService, JournalRecordService>();
 
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+
 builder.Services.AddScoped<IActivityRepository<Week, WeekTask, WeekGoal>, ActivityRepository<Week, WeekTask, WeekGoal>>();
 builder.Services.AddScoped<IActivityRepository<Day, DailyTask, DailyGoal>, ActivityRepository<Day, DailyTask, DailyGoal>>();
 builder.Services.AddScoped<IActivityService<Week, WeekTask>, ActivityService<Week, WeekTask>>();

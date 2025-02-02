@@ -11,6 +11,10 @@ using todo_list_enh.Server.Models.DTO.Activity;
 using Microsoft.AspNetCore.Authorization;
 using todo_list_enh.Server.Extensions;
 using todo_list_enh.Server.Models.DTO.Task;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using todo_list_enh.Server.Data;
+using todo_list_enh.Server.Repositories.Implementations;
 
 namespace todo_list_enh.Server.Controllers
 {
@@ -20,15 +24,27 @@ namespace todo_list_enh.Server.Controllers
     {
         private readonly ILogger<UsersController> _logger;
         private readonly IActivityRepository<Week, WeekTask, WeekGoal> _activityRepository;
-        private readonly IMapper mapper;
         private readonly IActivityService<Week, WeekTask> _activityService;
+        
+        private readonly IMapper mapper;
+        private readonly ETLDbContext _context;
+        private readonly ITaskRepository _tasks;
 
-        public WeekController(ILogger<UsersController> logger, IActivityRepository<Week, WeekTask, WeekGoal> activityRepository, IMapper mapper, IActivityService<Week, WeekTask> activityService)
+        public WeekController(
+            ILogger<UsersController> logger,
+            IActivityRepository<Week, WeekTask, WeekGoal> activityRepository,
+            IMapper mapper,
+            IActivityService<Week, WeekTask> activityService,
+            ETLDbContext context,
+            ITaskRepository taskRepository
+        )
         {
             this._logger = logger;
             this._activityRepository = activityRepository;
             this.mapper = mapper;
             this._activityService = activityService;
+            this._context = context;
+            this._tasks = taskRepository;
         }
 
         [Authorize]
@@ -55,16 +71,16 @@ namespace todo_list_enh.Server.Controllers
         public async Task<IActionResult> AddTask([FromBody] AddActivityTaskDTO data)
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
-
+            
             var result = await _activityService.AddActivityTask(data.ActivityId, data.AddTask, data.order);
-
-
+            
+            
             if (result)
             {
-                return Ok("activity created successfully");
+                return Ok("Activity created successfully.");
             }
-
-            return Ok("activity created successfully");
+            
+            return BadRequest("Data error.");
         }
     }
 }

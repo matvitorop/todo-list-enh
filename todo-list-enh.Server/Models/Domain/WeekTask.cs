@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace todo_list_enh.Server.Models.Domain
 {
@@ -18,6 +19,7 @@ namespace todo_list_enh.Server.Models.Domain
         public int Order { get; set; }
 
         public Week Week { get; set; } = null!;
+        //[JsonIgnore]
         public Task Task { get; set; } = null!;
 
     }
