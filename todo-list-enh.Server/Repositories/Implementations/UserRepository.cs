@@ -11,8 +11,7 @@ namespace todo_list_enh.Server.Repositories.Implementations
     public class UserRepository : Repository<User>, IUserRepository
     {
 
-        public UserRepository(ETLDbContext dbContext) : base(dbContext) 
-        {}
+        public UserRepository(ETLDbContext dbContext) : base(dbContext) {}
         public async Task<User> AddUser(User user)
         {
             user.Password = HashPassword(user.Password);

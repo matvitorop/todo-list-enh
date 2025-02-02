@@ -7,6 +7,7 @@ using System.Text;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Mapping;
 using todo_list_enh.Server.Middleware;
+using todo_list_enh.Server.Models.Domain;
 using todo_list_enh.Server.Repositories.Implementations;
 using todo_list_enh.Server.Repositories.Interfaces;
 using todo_list_enh.Server.Services;
@@ -81,12 +82,19 @@ builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<IJournalRecordRepository, JournalRecordRepository>();
 builder.Services.AddScoped<IJournalRecordService, JournalRecordService>();
 
+builder.Services.AddScoped<ITaskRepository, TaskRepository>();
+builder.Services.AddScoped<IGoalRepository, GoalRepository>();
 
+builder.Services.AddScoped<IActivityRepository<Week, WeekTask, WeekGoal>, ActivityRepository<Week, WeekTask, WeekGoal>>();
+builder.Services.AddScoped<IActivityRepository<Day, DailyTask, DailyGoal>, ActivityRepository<Day, DailyTask, DailyGoal>>();
+builder.Services.AddScoped<IActivityService<Week, WeekTask, WeekGoal>, ActivityService<Week, WeekTask, WeekGoal>>();
+//builder.Services.AddScoped<IActivityService<Day, DailyTask>, ActivityService<Day, DailyTask>>();
 
 //Adding automappers
 builder.Services.AddAutoMapper(typeof(UserMapper));
 builder.Services.AddAutoMapper(typeof(JournalMapper));
 builder.Services.AddAutoMapper(typeof(JournalRecordMapper));
+builder.Services.AddAutoMapper(typeof(ActivityMapper));
 
 //Add JWT settings
 var jwtSettings = builder.Configuration.GetSection("JwtSettings");

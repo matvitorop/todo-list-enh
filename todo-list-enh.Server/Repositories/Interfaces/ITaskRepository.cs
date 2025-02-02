@@ -2,5 +2,7 @@
 
 namespace todo_list_enh.Server.Repositories.Interfaces
 {
-    public interface IDayRepository : IActivityRepository<Day, DailyTask, DailyGoal> { }
+    public interface ITaskRepository : IRepository<Models.Domain.Task>
+    {
+    }
 }
