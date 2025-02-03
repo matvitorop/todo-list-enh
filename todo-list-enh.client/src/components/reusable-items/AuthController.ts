@@ -1,4 +1,4 @@
-import { AuthRequest, AuthResponse } from "../Interfaces/UserInterfaces"
+import { AuthRequest, AuthResponse } from "../../interfaces/UserInterfaces";
 
 const API_URL = "https://localhost:7289/Users";
 
