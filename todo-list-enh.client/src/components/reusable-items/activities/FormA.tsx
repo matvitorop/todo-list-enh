@@ -1,6 +1,6 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Paper, Typography, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Paper, Typography, Button, FormControl, MenuItem, Select, InputLabel } from "@mui/material";
 import { taskSchema } from "./ValidationSchemas";
 import { TaskFormData } from "../../../interfaces/ActivityInterfaces";
 import { useUserStore } from "../../state-manager/useStore";
@@ -9,7 +9,7 @@ interface FormAProps {
     onSubmit: (data: TaskFormData) => void;
 }
 
-const FormA: React.FC<FormAProps> = ({ onSubmit }) => {
+const FormA: React.FC<{ onSubmit: (data: TaskFormData, type: "task") => void }> = ({ onSubmit }) => {
     const { user } = useUserStore();
 
     const { control, handleSubmit, formState: { errors } } = useForm({
@@ -30,8 +30,9 @@ const FormA: React.FC<FormAProps> = ({ onSubmit }) => {
             },
             activityId: 1,
             order: 1,
+            scope: data.scope,
         };
-        onSubmit(formattedData);
+        onSubmit(formattedData, "task");
     };
 
     return (
@@ -41,30 +42,45 @@ const FormA: React.FC<FormAProps> = ({ onSubmit }) => {
                 <FormInput
                     name="title"
                     control={control}
-                    label="Назва"
+                    label="Title"
                     errors={errors}
                 />
                 <FormInput
                     name="description"
                     control={control}
-                    label="Опис"
+                    label="Description"
                     errors={errors}
                 />
                 <FormInput
                     name="startTime"
                     control={control}
-                    label="Час початку"
+                    label="Start time"
                     type="time"
                     errors={errors}
                 />
                 <FormInput
                     name="endTime"
                     control={control}
-                    label="Час завершення"
+                    label="End time"
                     type="time"
                     errors={errors}
                 />
-                <FormControlLabel control={<Checkbox {...register("isStrict")} />} label="Strict mode" />
+                {/*<FormControlLabel control={<Checkbox {...register("isStrict")} />} label="Strict mode" />*/}
+                <FormControl fullWidth margin="normal">
+                    <InputLabel>Scope</InputLabel>
+                    <Controller
+                        name="scope"
+                        control={control}
+                        defaultValue="week"
+                        render={({ field }) => (
+                            <Select {...field} label="Scope">
+                                <MenuItem value="week">Week</MenuItem>
+                                <MenuItem value="day">Day</MenuItem>
+                            </Select>
+                        )}
+                    />
+                </FormControl>
+
                 <Button type="submit" variant="contained" color="primary">Add</Button>
             </form>
         </Box>

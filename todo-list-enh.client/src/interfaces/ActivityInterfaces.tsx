@@ -22,9 +22,11 @@ export interface TaskFormData {
     addTask: AddTask;
     activityId: number;
     order: number;
+    scope: string;
 }
 
 export interface GoalFormData {
     addGoal: AddGoal;
     activityId: number;
+    scope: string;
 }

@@ -5,6 +5,7 @@ import NotFound from './pages/NotFound';
 import Home from './pages/Home';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
+import TaskPanel from './pages/TaskPanel';
 import Login from './pages/Login';
 import './App.css';
 import { useUserStore } from "./components/state-manager/useStore";
@@ -36,7 +37,7 @@ function App() {
                 { path: "/", element: <Home /> },
                 { path: "/login", element: <AuthAccess element={<Login />} /> },
                 { path: "/register", element: <AuthAccess element={<Register />} /> },
-                { path: "/dashboard", element: <PrivateRoute element={<Dashboard />} /> }
+                { path: "/dashboard", element: <PrivateRoute element={<TaskPanel />} /> }
             ]
         }
     ]);

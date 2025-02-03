@@ -1,18 +1,19 @@
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { Box, Paper, Typography, TextField, Button, Checkbox, FormControlLabel } from "@mui/material";
+import { Box, Paper, Typography, Button, MenuItem, Select, FormControl, InputLabel } from "@mui/material";
 import { goalSchema } from "./ValidationSchemas";
 import { GoalFormData } from "../../../interfaces/ActivityInterfaces";
 import { useUserStore } from "../../state-manager/useStore";
+import FormInput from "../../reusable-items/FormInput";
 
 interface FormBProps {
     onSubmit: (data: GoalFormData) => void;
 }
 
-const FormB: React.FC<FormBProps> = ({ onSubmit }) => {
+const FormB: React.FC<{ onSubmit: (data: GoalFormData, type: "goal") => void }> = ({ onSubmit }) => {
     const { user } = useUserStore();
 
-    const { register, handleSubmit, formState: { errors } } = useForm({
+    const { control, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(goalSchema),
     });
 
@@ -27,18 +28,43 @@ const FormB: React.FC<FormBProps> = ({ onSubmit }) => {
                 createdAt: new Date().toISOString(),
             },
             activityId: 1,
+            scope: data.scope,
         };
-        onSubmit(formattedData);
+        onSubmit(formattedData, "goal");
     };
 
     return (
         <Box component={Paper} p={3} elevation={3}>
-            <Typography variant="h6">Нова ціль</Typography>
+            <Typography variant="h6">Add new Goal</Typography>
             <form onSubmit={handleSubmit(submitHandler)}>
-                <TextField label="Назва" fullWidth margin="normal" {...register("title")} error={!!errors.title} helperText={errors.title?.message} />
-                <TextField label="Опис" fullWidth margin="normal" {...register("description")} error={!!errors.description} helperText={errors.description?.message} />
-                <FormControlLabel control={<Checkbox {...register("isTemplate")} />} label="Шаблон" />
-                <Button type="submit" variant="contained" color="secondary">Зберегти</Button>
+                <FormInput
+                    name="title"
+                    control={control}
+                    label="Title"
+                    errors={errors}
+                />
+                <FormInput
+                    name="description"
+                    control={control}
+                    label="Description"
+                    errors={errors}
+                />
+                {/*<FormControlLabel control={<Checkbox {...control.register("isTemplate")} />} label="Template" />*/}
+                <FormControl fullWidth margin="normal">
+                    <InputLabel>Scope</InputLabel>
+                    <Controller
+                        name="scope"
+                        control={control}
+                        defaultValue="week"
+                        render={({ field }) => (
+                            <Select {...field} label="Scope">
+                                <MenuItem value="week">Week</MenuItem>
+                                <MenuItem value="day">Day</MenuItem>
+                            </Select>
+                        )}
+                    />
+                </FormControl>
+                <Button type="submit" variant="contained" color="secondary">Add</Button>
             </form>
         </Box>
     );
