@@ -4,7 +4,9 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Container, Typography, Box, Alert } from "@mui/material";
 import { register } from "../components/reusable-items/AuthController";
-import { AuthRequest } from "./../interfaces/UserInterfaces";
+
+import { AuthRequest } from "../interfaces/UserInterfaces";
+
 import FormInput from "../components/reusable-items/FormInput";
 import { useUserStore } from "../components/state-manager/useStore";
 
