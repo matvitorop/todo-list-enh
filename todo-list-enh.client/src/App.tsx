@@ -1,11 +1,11 @@
 import { createBrowserRouter, RouterProvider, Navigate } from 'react-router-dom'
 import { useEffect } from 'react';
-import Layout from './components/pages/Layout';
-import NotFound from './components/pages/NotFound';
-import Home from './components/pages/Home';
-import Register from './components/pages/Register';
-import Dashboard from './components/pages/Dashboard';
-import Login from './components/pages/Login';
+import Layout from './pages/Layout';
+import NotFound from './pages/NotFound';
+import Home from './pages/Home';
+import Register from './pages/Register';
+import Dashboard from './pages/Dashboard';
+import Login from './pages/Login';
 import './App.css';
 import { useUserStore } from "./components/state-manager/useStore";
 
