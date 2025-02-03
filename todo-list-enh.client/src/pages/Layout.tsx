@@ -1,5 +1,5 @@
 import { Link, Outlet } from "react-router-dom";
-import { useUserStore } from "../state-manager/useStore";
+import { useUserStore } from "../components/state-manager/useStore";
 
 
 export default function Layout() {

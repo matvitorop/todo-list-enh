@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Container, Typography, Box, Alert } from "@mui/material";
-import { register } from "../reusable-items/AuthController";
-import { AuthRequest } from "../Interfaces/UserInterfaces";
-import FormInput from "../reusable-items/FormInput";
-import { useUserStore } from "../state-manager/useStore";
+import { register } from "../components/reusable-items/AuthController";
+import { AuthRequest } from "./../interfaces/UserInterfaces";
+import FormInput from "../components/reusable-items/FormInput";
+import { useUserStore } from "../components/state-manager/useStore";
 
 const schema = yup.object().shape({
     username: yup.string().min(3, "Username must be at least 3 characters").required("Username is required"),
