@@ -1,16 +1,16 @@
 import axios from 'axios';
 
 const errorMessages: Record<number, string> = {
-    400: "Некоректний запит.",
-    401: "Неавторизований доступ.",
-    403: "У вас недостатньо прав.",
-    404: "Ресурс не знайдено.",
-    500: "Внутрішня помилка сервера.",
+    400: "Bad reqest",
+    401: "You need to authorize",
+    403: "You dont have the access",
+    404: "Not found",
+    500: "Internal server error",
 };
 
 export const handleApiError = (error: unknown) => {
     if (axios.isAxiosError(error) && error.response) {
-        return errorMessages[error.response.status] || "Сталася невідома помилка.";
+        return errorMessages[error.response.status] || "Unknown error happend";
     }
-    return "Помилка мережі або сервер недоступний.";
+    return "Network error or server is inaccessible";
 };

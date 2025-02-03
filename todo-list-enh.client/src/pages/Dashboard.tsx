@@ -7,7 +7,6 @@ export default function Dashboard() {
                 <p>Only for cool guys</p>
             </div>
             <div>
-                <h2>Мої журнали</h2>
                 <JournalList />
             </div>
             
