@@ -3,10 +3,10 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { Button, Container, Typography, Alert, Box } from "@mui/material";
-import FormInput from "../reusable-items/FormInput";
+import FormInput from "../components/reusable-items/FormInput";
 import { AuthRequest } from "../Interfaces/UserInterfaces";
-import { loginUser } from "../reusable-items/AuthController";
-import { useUserStore } from "../state-manager/useStore";
+import { loginUser } from "../components/reusable-items/AuthController";
+import { useUserStore } from "../components/state-manager/useStore";
 
 const schema = yup.object().shape({
     email: yup.string().email("Invalid email format").required("Email is required"),
