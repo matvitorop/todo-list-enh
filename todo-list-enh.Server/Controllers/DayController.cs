@@ -40,7 +40,7 @@ namespace todo_list_enh.Server.Controllers
 
         [Authorize]
         [HttpPost]
-        public async Task<IActionResult> CreateWeek()
+        public async Task<IActionResult> CreateDay()
         {
             var userId = this.GetUserIdOrThrowUnauthorized();
 
@@ -53,7 +53,7 @@ namespace todo_list_enh.Server.Controllers
                 return BadRequest("User already exists.");
             }
 
-            return Ok("activity created successfully");
+            return Ok("Activity created successfully");
         }
 
         [Authorize]
@@ -86,6 +86,40 @@ namespace todo_list_enh.Server.Controllers
             if (result)
             {
                 return Ok("Goal created successfully.");
+            }
+
+            return BadRequest("Data error.");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getTasks")]
+        public async Task<IActionResult> GetTasks([FromBody] int activityID)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _dayActivityService.GetUserTasks(activityID);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Data error.");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getGoals")]
+        public async Task<IActionResult> GetGoals([FromBody] int activityID)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _dayActivityService.GetUserGoals(activityID);
+
+            if (result != null)
+            {
+                return Ok(result);
             }
 
             return BadRequest("Data error.");

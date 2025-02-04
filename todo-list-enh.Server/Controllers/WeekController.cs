@@ -105,5 +105,39 @@ namespace todo_list_enh.Server.Controllers
 
             return BadRequest("Data error.");
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getTasks")]
+        public async Task<IActionResult> GetTasks([FromBody] int activityID)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _weekActivityService.GetUserTasks(activityID);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Data error.");
+        }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getGoals")]
+        public async Task<IActionResult> GetGoals([FromBody] int activityID)
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _weekActivityService.GetUserGoals(activityID);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Data error.");
+        }
     }
 }

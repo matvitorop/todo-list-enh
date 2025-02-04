@@ -88,7 +88,7 @@ builder.Services.AddScoped<IGoalRepository, GoalRepository>();
 builder.Services.AddScoped<IActivityRepository<Week, WeekTask, WeekGoal>, ActivityRepository<Week, WeekTask, WeekGoal>>();
 builder.Services.AddScoped<IActivityRepository<Day, DailyTask, DailyGoal>, ActivityRepository<Day, DailyTask, DailyGoal>>();
 builder.Services.AddScoped<IActivityService<Week, WeekTask, WeekGoal>, ActivityService<Week, WeekTask, WeekGoal>>();
-//builder.Services.AddScoped<IActivityService<Day, DailyTask>, ActivityService<Day, DailyTask>>();
+builder.Services.AddScoped<IActivityService<Day, DailyTask, DailyGoal>, ActivityService<Day, DailyTask, DailyGoal>>();
 
 //Adding automappers
 builder.Services.AddAutoMapper(typeof(UserMapper));

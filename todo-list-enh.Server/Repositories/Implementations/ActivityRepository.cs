@@ -14,7 +14,6 @@ namespace todo_list_enh.Server.Repositories.Implementations
         private readonly ETLDbContext _context;
         private readonly Repository<TTask> _taskRepository;
         private readonly Repository<TGoal> _goalRepository;
-
         public ActivityRepository(ETLDbContext context) : base(context)
         {
             _context = context;

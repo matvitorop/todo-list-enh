@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using todo_list_enh.Server.Models.Domain;
 
 namespace todo_list_enh.Server.Models.DTO.Task
 {
@@ -14,5 +15,8 @@ namespace todo_list_enh.Server.Models.DTO.Task
         public bool IsTemplate { get; set; }
         public TimeSpan? StartTime { get; set; } = TimeSpan.Zero;
         public TimeSpan? EndTime { get; set; } = TimeSpan.Zero;
+
+        public ICollection<DailyTask> DailyTasks { get; set; } = new List<DailyTask>();
+        public ICollection<WeekTask> WeekTasks { get; set; } = new List<WeekTask>();
     }
 }

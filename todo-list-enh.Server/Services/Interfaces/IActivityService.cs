@@ -9,5 +9,8 @@ namespace todo_list_enh.Server.Services.Interfaces
         Task<bool> AddActivity(AddActivityDTO dto);
         Task<bool> AddActivityTask(AddTaskDTO task, int activityId, int order);
         Task<bool> AddActivityGoal(AddGoalDTO goal, int activityId);
+        
+        Task<IEnumerable<TTask>> GetUserTasks(int activityId);
+        Task<IEnumerable<TGoal>> GetUserGoals(int activityId);
     }
 }

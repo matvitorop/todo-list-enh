@@ -20,6 +20,8 @@ namespace todo_list_enh.Server.Mapping
             CreateMap<Goal, GoalDTO>();
             
             CreateMap<AddGoalDTO, Goal>();
+
+            //CreateMap<IEnumerable<DailyTask>, >();
         }
     }
 }

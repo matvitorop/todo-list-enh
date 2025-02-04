@@ -22,12 +22,23 @@ namespace todo_list_enh.Server.Services.Implementations
         private readonly IGoalRepository _goals;
         private readonly ITaskRepository _tasks;
 
-        public ActivityService(ETLDbContext context, IMapper mapper, ITaskRepository taskRepository, IGoalRepository goalRepository)
+        private readonly IActivityRepository<Day, DailyTask, DailyGoal> _dayActivityRepository;
+        private readonly IActivityRepository<Week, WeekTask, WeekGoal> _weekActivityRepository;
+
+        public ActivityService(ETLDbContext context, 
+            IMapper mapper, 
+            ITaskRepository taskRepository, 
+            IGoalRepository goalRepository, 
+            IActivityRepository<Day, DailyTask, DailyGoal> dayActivityRepository, 
+            IActivityRepository<Week, WeekTask, WeekGoal> weekActivityRepository)
         {
             _context = context;
             _mapper = mapper;
             this._tasks = taskRepository;
             this._goals = goalRepository;
+
+            this._dayActivityRepository = dayActivityRepository;
+            this._weekActivityRepository = weekActivityRepository;
         }
 
         public async Task<bool> AddActivity(AddActivityDTO dto)
@@ -95,5 +106,38 @@ namespace todo_list_enh.Server.Services.Implementations
 
             return true;
         }
+
+        public async Task<IEnumerable<TTask>> GetUserTasks(int userId)
+        {
+            var tasks = await GetTasksFromRepository(userId);
+            return tasks;
+        }
+
+        public async Task<IEnumerable<TGoal>> GetUserGoals(int userId)
+        {
+            var goals = await GetGoalsFromRepository(userId);
+            return goals;
+        }
+
+        private async Task<IEnumerable<TTask>> GetTasksFromRepository(int activityId)
+        {
+            object? repository = typeof(TActivity) == typeof(Day) ? _dayActivityRepository
+                             : typeof(TActivity) == typeof(Week) ? _weekActivityRepository
+                             : throw new InvalidOperationException($"Unsupported activity type: {typeof(TActivity).Name}");
+
+            var tasks = await ((IActivityRepository<TActivity, TTask, TGoal>)repository).GetAllTasks(activityId);
+            return tasks;
+        }
+
+        private async Task<IEnumerable<TGoal>> GetGoalsFromRepository(int activityId)
+        {
+            object? repository = typeof(TActivity) == typeof(Day) ? _dayActivityRepository
+                             : typeof(TActivity) == typeof(Week) ? _weekActivityRepository
+                             : throw new InvalidOperationException($"Unsupported activity type: {typeof(TActivity).Name}");
+
+            var goals = await ((IActivityRepository<TActivity, TTask, TGoal>)repository).GetAllGoals(activityId);
+            return goals;
+        }
+
     }
 }
