@@ -17,92 +17,68 @@ namespace todo_list_enh.Server.Services.Implementations
     where TTask : class
     where TGoal : class
     {
-        private readonly ETLDbContext _context;
         private readonly IMapper _mapper;
         private readonly IGoalRepository _goals;
         private readonly ITaskRepository _tasks;
+        private readonly IActivityRepository<TActivity, TTask, TGoal> _activityRepository;
 
-        private readonly IActivityRepository<Day, DailyTask, DailyGoal> _dayActivityRepository;
-        private readonly IActivityRepository<Week, WeekTask, WeekGoal> _weekActivityRepository;
-
-        public ActivityService(ETLDbContext context, 
-            IMapper mapper, 
-            ITaskRepository taskRepository, 
-            IGoalRepository goalRepository, 
-            IActivityRepository<Day, DailyTask, DailyGoal> dayActivityRepository, 
-            IActivityRepository<Week, WeekTask, WeekGoal> weekActivityRepository)
+        public ActivityService(
+            IMapper mapper,
+            ITaskRepository taskRepository,
+            IGoalRepository goalRepository,
+            IActivityRepository<TActivity, TTask, TGoal> activityRepository)
         {
-            _context = context;
             _mapper = mapper;
-            this._tasks = taskRepository;
-            this._goals = goalRepository;
-
-            this._dayActivityRepository = dayActivityRepository;
-            this._weekActivityRepository = weekActivityRepository;
+            _tasks = taskRepository;
+            _goals = goalRepository;
+            _activityRepository = activityRepository;
         }
 
         public async Task<bool> AddActivity(AddActivityDTO dto)
         {
             var activity = _mapper.Map<TActivity>(dto);
-
-            await _context.Set<TActivity>().AddAsync(activity);
-            await _context.SaveChangesAsync();
-
+            await _activityRepository.AddAsync(activity);
             return true;
         }
 
-        public async Task<bool> AddActivityTask(AddTaskDTO task, int activityId, int order)
+        public async Task<bool> AddActivityTask(AddTaskDTO taskDto, int activityId, int order)
         {
-            var maxOrder = await _context.Set<TTask>()
-                .Where(t => EF.Property<int>(t, "periodId") == activityId)
-                .MaxAsync(t => (int?)EF.Property<int>(t, "Order")) ?? 0;
+            var maxOrder = (await _activityRepository.GetAllTasks(activityId))
+                .Max(t => (int?)EF.Property<int>(t, "Order")) ?? 0;
 
             order = maxOrder + 1;
 
-            var existingActivityTask = await _context.Set<TTask>().FirstOrDefaultAsync(t =>
-                EF.Property<int>(t, "periodId") == activityId &&
-                EF.Property<int>(t, "Order") == order);
+            var existingActivityTask = (await _activityRepository.GetAllTasks(activityId))
+                .FirstOrDefault(t => EF.Property<int>(t, "Order") == order);
 
             if (existingActivityTask != null)
             {
                 return false;
             }
 
-            var newTask = _mapper.Map<Models.Domain.Task>(task);
-            await _tasks.AddAsync(newTask);
+            var baseTask = _mapper.Map<Models.Domain.Task>(taskDto);
+            await _tasks.AddAsync(baseTask);
 
-            var newActivityTask = Activator.CreateInstance<TTask>();
-            // names of model's props
-            typeof(TTask).GetProperty("periodId")?.SetValue(newActivityTask, activityId);
-            typeof(TTask).GetProperty("TaskId")?.SetValue(newActivityTask, newTask.Id);
-            typeof(TTask).GetProperty("Order")?.SetValue(newActivityTask, order);
+            var newTask = _mapper.Map<TTask>(baseTask);
 
-            await _context.Set<TTask>().AddAsync(newActivityTask);
-            await _context.SaveChangesAsync();
+            typeof(TTask).GetProperty("periodId")?.SetValue(newTask, activityId);
+            typeof(TTask).GetProperty("Order")?.SetValue(newTask, order);
 
+            await _activityRepository.AddTask(newTask);
             return true;
         }
 
-        public async Task<bool> AddActivityGoal(AddGoalDTO goal, int activityId)
+        public async Task<bool> AddActivityGoal(AddGoalDTO goalDto, int activityId)
         {
+            var baseGoal = _mapper.Map<Goal>(goalDto);
+            await _goals.AddAsync(baseGoal);
 
-            //var existingActivityGoal = await _context.Set<TGoal>().FirstOrDefaultAsync(g =>
-            //    EF.Property<int>(g, "periodId") == activityId);
-            //
-            //if (existingActivityGoal != null)
-            //{
-            //    return false;
-            //}
+            var newGoal = _mapper.Map<TGoal>(baseGoal);
 
-            var newGoal = _mapper.Map<Goal>(goal);
-            await _goals.AddAsync(newGoal);
-
-            var newActivityGoal = Activator.CreateInstance<TGoal>();
-            typeof(TGoal).GetProperty("periodId")?.SetValue(newActivityGoal, activityId);
-            typeof(TGoal).GetProperty("GoalId")?.SetValue(newActivityGoal, newGoal.Id);
-
-            await _context.Set<TGoal>().AddAsync(newActivityGoal);
-            await _context.SaveChangesAsync();
+            typeof(TGoal).GetProperty("periodId")?.SetValue(newGoal, activityId);
+            typeof(TGoal).GetProperty("GoalId")?.SetValue(newGoal, baseGoal.Id);
+            
+            await _activityRepository.AddGoal(newGoal);
 
             return true;
         }
@@ -121,23 +97,14 @@ namespace todo_list_enh.Server.Services.Implementations
 
         private async Task<IEnumerable<TTask>> GetTasksFromRepository(int activityId)
         {
-            object? repository = typeof(TActivity) == typeof(Day) ? _dayActivityRepository
-                             : typeof(TActivity) == typeof(Week) ? _weekActivityRepository
-                             : throw new InvalidOperationException($"Unsupported activity type: {typeof(TActivity).Name}");
-
-            var tasks = await ((IActivityRepository<TActivity, TTask, TGoal>)repository).GetAllTasks(activityId);
+            var tasks = await _activityRepository.GetAllTasks(activityId);
             return tasks;
         }
 
         private async Task<IEnumerable<TGoal>> GetGoalsFromRepository(int activityId)
         {
-            object? repository = typeof(TActivity) == typeof(Day) ? _dayActivityRepository
-                             : typeof(TActivity) == typeof(Week) ? _weekActivityRepository
-                             : throw new InvalidOperationException($"Unsupported activity type: {typeof(TActivity).Name}");
-
-            var goals = await ((IActivityRepository<TActivity, TTask, TGoal>)repository).GetAllGoals(activityId);
+            var goals = await _activityRepository.GetAllGoals(activityId);
             return goals;
         }
-
     }
 }

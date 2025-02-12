@@ -15,13 +15,30 @@ namespace todo_list_enh.Server.Mapping
 
             CreateMap<AddActivityDTO, Day>();
 
+            // TASKS 
             CreateMap<AddTaskDTO, Models.Domain.Task>();
 
+            CreateMap<Models.Domain.Task, WeekTask>()
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            CreateMap<Models.Domain.Task, DailyTask>()
+                .ForMember(dest => dest.TaskId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+
+            
+            //GOALS
             CreateMap<Goal, GoalDTO>();
             
             CreateMap<AddGoalDTO, Goal>();
 
-            //CreateMap<IEnumerable<DailyTask>, >();
+            CreateMap<Goal, WeekGoal>()
+                .ForMember(dest => dest.GoalId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
+            
+            CreateMap<Goal, DailyGoal>()
+                .ForMember(dest => dest.GoalId, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.Id, opt => opt.Ignore());
         }
     }
 }
