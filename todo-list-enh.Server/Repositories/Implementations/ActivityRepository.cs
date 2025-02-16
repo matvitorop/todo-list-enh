@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
+using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using todo_list_enh.Server.Data;
 using todo_list_enh.Server.Models.Domain;
@@ -93,6 +94,16 @@ namespace todo_list_enh.Server.Repositories.Implementations
         {
             await _goalRepository.AddAsync(goal);
             return true;
+        }
+
+        public async Task<bool> AnyAsync(Expression<Func<TActivity, bool>> predicate)
+        {
+            return await _context.Set<TActivity>().AnyAsync(predicate);
+        }
+
+        public async System.Threading.Tasks.Task SaveChangesAsync()
+        {
+            await _context.SaveChangesAsync();
         }
     }
 }

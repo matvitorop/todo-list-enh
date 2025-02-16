@@ -37,9 +37,28 @@ namespace todo_list_enh.Server.Services.Implementations
         public async Task<bool> AddActivity(AddActivityDTO dto)
         {
             var activity = _mapper.Map<TActivity>(dto);
+
+            var startDateProperty = typeof(TActivity).GetProperty("StartDate");
+            if (startDateProperty == null)
+                throw new InvalidOperationException("StartDate propety doesnt exist");
+
+            var startDateValue = dto.StartDate.Date;
+            int userId = dto.UserId;
+
+            while (await _activityRepository.AnyAsync(a =>
+                EF.Property<int>(a, "UserId") == userId &&
+                EF.Property<DateTime>(a, "StartDate") == startDateValue))
+            {
+                startDateValue = startDateValue.AddDays(typeof(TActivity) == typeof(Week) ? 7 : 1);
+            }
+
+            startDateProperty.SetValue(activity, startDateValue);
+
             await _activityRepository.AddAsync(activity);
+            //await _activityRepository.SaveChangesAsync();
             return true;
         }
+
 
         public async Task<bool> AddActivityTask(AddTaskDTO taskDto, int activityId, int order)
         {

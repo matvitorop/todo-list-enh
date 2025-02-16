@@ -1,4 +1,6 @@
-﻿namespace todo_list_enh.Server.Repositories.Interfaces
+﻿using System.Linq.Expressions;
+
+namespace todo_list_enh.Server.Repositories.Interfaces
 {
     public interface IActivityRepository<TActivity, TTask, TGoal> : IRepository<TActivity>
      where TActivity : class
@@ -14,5 +16,9 @@
         Task<bool> ChangeTaskOrder(int activityId, int taskIdToReplace, int taskIdToRemove);
         Task<bool> AddTask(TTask task);
         Task<bool> AddGoal(TGoal goal);
+
+        // probably remove to Repository
+        Task<bool> AnyAsync(Expression<Func<TActivity, bool>> predicate);
+        Task SaveChangesAsync();
     }
 }
