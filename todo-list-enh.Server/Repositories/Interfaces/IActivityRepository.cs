@@ -20,5 +20,9 @@ namespace todo_list_enh.Server.Repositories.Interfaces
         // probably remove to Repository
         Task<bool> AnyAsync(Expression<Func<TActivity, bool>> predicate);
         Task SaveChangesAsync();
+
+        Task<IEnumerable<TTask>> GetAllTasksWithDetails(int activityId);
+        Task<IEnumerable<TGoal>> GetAllGoalsWithDetails(int activityId);
+
     }
 }

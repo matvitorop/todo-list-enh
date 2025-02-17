@@ -105,5 +105,22 @@ namespace todo_list_enh.Server.Repositories.Implementations
         {
             await _context.SaveChangesAsync();
         }
+
+        public async Task<IEnumerable<TTask>> GetAllTasksWithDetails(int activityId)
+        {
+            return await _context.Set<TTask>()
+                .Where(t => EF.Property<int>(t, "periodId") == activityId)
+                .Include(t => EF.Property<Models.Domain.Task>(t, "Task"))
+                .ToListAsync();
+           
+        }
+
+        public async Task<IEnumerable<TGoal>> GetAllGoalsWithDetails(int activityId)
+        {
+            return await _context.Set<TGoal>()
+                .Where(t => EF.Property<int>(t, "periodId") == activityId)
+                .Include(t => EF.Property<Models.Domain.Goal>(t, "Goal"))
+                .ToListAsync();
+        }
     }
 }

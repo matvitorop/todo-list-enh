@@ -38,6 +38,7 @@ namespace todo_list_enh.Server.Services.Implementations
         {
             var activity = _mapper.Map<TActivity>(dto);
 
+            // Checking new date for uniqueness
             var startDateProperty = typeof(TActivity).GetProperty("StartDate");
             if (startDateProperty == null)
                 throw new InvalidOperationException("StartDate propety doesnt exist");
@@ -116,13 +117,13 @@ namespace todo_list_enh.Server.Services.Implementations
 
         private async Task<IEnumerable<TTask>> GetTasksFromRepository(int activityId)
         {
-            var tasks = await _activityRepository.GetAllTasks(activityId);
+            var tasks = await _activityRepository.GetAllTasksWithDetails(activityId);
             return tasks;
         }
 
         private async Task<IEnumerable<TGoal>> GetGoalsFromRepository(int activityId)
         {
-            var goals = await _activityRepository.GetAllGoals(activityId);
+            var goals = await _activityRepository.GetAllGoalsWithDetails(activityId);
             return goals;
         }
     }

@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace todo_list_enh.Server.Models.Domain
 {
@@ -24,7 +25,10 @@ namespace todo_list_enh.Server.Models.Domain
         public TimeSpan? EndTime { get; set; }
 
         public User User { get; set; } = null!;
+        
+        [JsonIgnore]
         public ICollection<DailyTask> DailyTasks { get; set; } = new List<DailyTask>();
+        [JsonIgnore]
         public ICollection<WeekTask> WeekTasks { get; set; } = new List<WeekTask>();
     }
 
