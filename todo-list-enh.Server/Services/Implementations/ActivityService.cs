@@ -103,15 +103,15 @@ namespace todo_list_enh.Server.Services.Implementations
             return true;
         }
 
-        public async Task<IEnumerable<TTask>> GetUserTasks(int userId)
+        public async Task<IEnumerable<TTask>> GetUserTasks(int activityId)
         {
-            var tasks = await GetTasksFromRepository(userId);
+            var tasks = await GetTasksFromRepository(activityId);
             return tasks;
         }
 
-        public async Task<IEnumerable<TGoal>> GetUserGoals(int userId)
+        public async Task<IEnumerable<TGoal>> GetUserGoals(int activityId)
         {
-            var goals = await GetGoalsFromRepository(userId);
+            var goals = await GetGoalsFromRepository(activityId);
             return goals;
         }
 
@@ -125,6 +125,13 @@ namespace todo_list_enh.Server.Services.Implementations
         {
             var goals = await _activityRepository.GetAllGoalsWithDetails(activityId);
             return goals;
+        }
+
+        public async Task<IEnumerable<ActivityDTO>> GetUserPeriods(int userId)
+        {
+            var userPeriods = await _activityRepository.FindAsync(t => EF.Property<int>(t, "UserId") == userId);
+            
+            return _mapper.Map<List<ActivityDTO>>(userPeriods);
         }
     }
 }

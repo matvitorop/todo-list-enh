@@ -12,5 +12,7 @@ namespace todo_list_enh.Server.Services.Interfaces
         
         Task<IEnumerable<TTask>> GetUserTasks(int activityId);
         Task<IEnumerable<TGoal>> GetUserGoals(int activityId);
+
+        Task<IEnumerable<ActivityDTO>> GetUserPeriods(int user);
     }
 }

@@ -139,5 +139,22 @@ namespace todo_list_enh.Server.Controllers
 
             return BadRequest("Data error.");
         }
+
+        [Authorize]
+        [HttpPost]
+        [Route("getPeriods")]
+        public async Task<IActionResult> getPeriods()
+        {
+            var userId = this.GetUserIdOrThrowUnauthorized();
+
+            var result = await _weekActivityService.GetUserPeriods(userId);
+
+            if (result != null)
+            {
+                return Ok(result);
+            }
+
+            return BadRequest("Data error.");
+        }
     }
 }

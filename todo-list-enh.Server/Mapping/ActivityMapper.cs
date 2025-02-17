@@ -15,6 +15,10 @@ namespace todo_list_enh.Server.Mapping
 
             CreateMap<AddActivityDTO, Day>();
 
+            CreateMap<Week, ActivityDTO>();
+
+            CreateMap<Day, ActivityDTO>();
+
             // TASKS 
             CreateMap<AddTaskDTO, Models.Domain.Task>();
 
